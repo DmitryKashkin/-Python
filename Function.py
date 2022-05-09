@@ -1,17 +1,17 @@
-# Уникальные
-def unique(user_list):
-    uniq_list = [user_list[0]]
-    for item in user_list:
-        if item in uniq_list:
-            continue
-        uniq_list.append(item)
-    return uniq_list
-
-
-mylist = [1, 1, 2, 1, 3, 2, 3]
-print(unique(mylist))
-
-
+# # Уникальные
+# def unique(user_list):
+#     uniq_list = [user_list[0]]
+#     for item in user_list:
+#         if item in uniq_list:
+#             continue
+#         uniq_list.append(item)
+#     return uniq_list
+#
+#
+# mylist = [1, 1, 2, 1, 3, 2, 3]
+# print(unique(mylist))
+#
+#
 # # Сколько четных
 # def even_counter(user_list):
 #     count = 0
