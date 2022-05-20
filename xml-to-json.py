@@ -1,7 +1,4 @@
 import xml.etree.ElementTree as eT
-sample_json = ['"taxCode"', '"section"', '"barcode"', '"partsCount"',
-               '"price"', '"name"', '"code"', '"undivided"', '"partPrice"',
-               '"measureUnit"', '"typeCode"']
 sample_xml = ['BARCODE', 'PRICE', 'NAME', 'PLU']
 dict0 = {'BARCODE': '"barcode":', 'PRICE': '"price":',
          'NAME': ',"name":"', 'PLU': '","code":'}
