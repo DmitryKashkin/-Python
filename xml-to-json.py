@@ -1,55 +1,39 @@
-# import json
-import xml.etree.ElementTree as ET
-
-sample_json = ['"taxCode"', '"section"', '"barcode"', '"partsCount"',
-               '"price"', '"name"', '"code"', '"undivided"', '"partPrice"',
-               '"measureUnit"', '"typeCode"']
-sample_xml = ['BARCODE', 'PRICE', 'NAME', 'PLU']
+import xml.etree.ElementTree as eT
+# Создаем пары соответствия названий xml-json
 dict0 = {'BARCODE': '"barcode":', 'PRICE': '"price":',
          'NAME': ',"name":"', 'PLU': '","code":'}
 prefix = '{"baseVer":"0.4","base":['
 suffix = ']}'
 item = ''
 item0 = ['{"taxCode":6,"section":1,', ',"partsCount":0,',
-         ',"undivided":true,"partPrice":0,"measureUnit":0,"typeCode":1}']
-root_node = ET.parse('prazdnik.xml').getroot()
+         ',"undivided":true,"partPrice":0,"measureUnit":0,"typeCode":1},']
+root_node = eT.parse('prazdnik.xml').getroot()
+f = open('prazdnik.json', 'w+')
+f.truncate(0)
+f.write(prefix)
 for tag in root_node.findall('WARES/WARE'):
     item += item0[0]
-    for i in sample_xml:
+    for i in dict0.keys():
+        if i == 'PRICE':
+            item += dict0[i] + str(int(tag.get(i)) * 100)
+            # цена в xml в рублях, в json в копейках
+            continue
         item += dict0[i] + tag.get(i)
         if i == 'BARCODE':
             item += item0[1]
     item += item0[2]
-    print(item)
+    f.write(item)
     item = ''
-
-    #     item += str()
-    #     items[sample_json[3]] =
-    # plu = tag.get(sample_xml[0])
-    # namt = tag.get(sample_xml[1])
-    # barcode = tag.get('BARCODE')
-    # if barcode is not None:
-    # print(barcode)
-#     items[sample_json[0]] = tax_code
-# print(items.items())
-
-# print(root_node)
-
-# f_xml = open('prazdnik.xml')
-# ff = f_xml.read(500)
-# # print(ff)
-# for i in range(100):
-#     ff = f_xml.readline(i)
-#     # print(type(ff))
-#     print(ff)
-
-
-#
-# f_json = open('prazdnik.json')
-# ff = json.loads(f_json.read())
-#
-# print(type(ff))
-# print(ff)
-#
-# f_json.close()
-# f_xml.close()
+# удаляем лишнюю запятую в конце
+f.seek(f.tell()-1)
+f.truncate()
+f.write(suffix)
+f.close()
+# перекодируем в utf8
+f = open('prazdnik.json', 'rb+')
+item = f.read()
+item = item.decode('cp1251').encode('utf8')
+f.seek(0)
+f.truncate()
+f.write(item)
+f.close()
