@@ -8,6 +8,7 @@ def open_file():
     filepath = askopenfilename(
         filetypes=[("xml", "*.xml")]
     )
+    label['text'] = label_text + filepath
 
 
 def convert():
@@ -51,26 +52,18 @@ def convert():
     f.truncate()
     f.write(item)
     f.close()
+    label['text'] = 'Done!'
     return
 
 
 filepath = ''
-
+label_text = 'You file is: '
 window = tk.Tk()
 window.title("xml-to-json converter")
-
-window.rowconfigure(0, minsize=800, weight=1)
-window.columnconfigure(1, minsize=800, weight=1)
-
-txt_edit = tk.Text(window)
-fr_buttons = tk.Frame(window)
-btn_open = tk.Button(fr_buttons, text="Открыть", command=open_file)
-btn_save = tk.Button(fr_buttons, text="Convert", command=convert)
-
-btn_open.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
-btn_save.grid(row=1, column=0, sticky="ew", padx=5)
-
-fr_buttons.grid(row=0, column=0, sticky="ns")
-txt_edit.grid(row=0, column=1, sticky="nsew")
-
+btn_open = tk.Button(text="Выбрать xml-файл", command=open_file)
+btn_open.pack()
+label = tk.Label(text=label_text, width=100, height=2)
+label.pack()
+btn_conv = tk.Button(text="Convert", command=convert)
+btn_conv.pack()
 window.mainloop()
