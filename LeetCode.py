@@ -15,65 +15,127 @@ class ListNode:
             temp = temp.next
         return l0
 
-    def del_node(self, node): # Delete Node in a Linked List
+    def del_node(self, node):  # Delete Node in a Linked List
         temp = self
-        while temp.next:
+        while temp.next is not None:
             if node.val == temp.next.val:
                 temp.next = temp.next.next
                 break
             temp = temp.next
 
+    def print(self):
+        temp = self
+        while temp is not None:
+            print(temp.val)
+            temp = temp.next
 
-head = ListNode().list_to_node([4,5,1,9])
-node = ListNode().list_to_node([1])
-head.del_node(node)
-print(head.next.next.val)
+    def len(self):
+        i, temp = 0, self
+        while temp is not None:
+            i += 1
+            temp = temp.next
+        return i
 
+    def removeNthFromEnd(self, n):
+        temp = self
+        for i in range(temp.len() - n - 1):
+            temp = temp.next
+        temp.next = temp.next.next
 
-
-def mergeTwoLists(l1: ListNode, l2: ListNode) -> ListNode:
-    # Check if either of the lists is null
-    if l1 is None:
-        return l2
-    if l2 is None:
-        return l1
-    # Choose head which is smaller of the two lists
-    if l1.val < l2.val:
-        temp = head = ListNode(l1.val)
-        l1 = l1.next
-    else:
-        temp = head = ListNode(l2.val)
-        l2 = l2.next
-    # Loop until any of the list becomes null
-    while l1 is not None and l2 is not None:
-        if l1.val < l2.val:
-            temp.next = ListNode(l1.val)
-            l1 = l1.next
-        else:
-            temp.next = ListNode(l2.val)
-            l2 = l2.next
-        temp = temp.next
-    # Add all the nodes in l1, if remaining
-    while l1 is not None:
-        temp.next = ListNode(l1.val)
-        l1 = l1.next
-        temp = temp.next
-    # Add all the nodes in l2, if remaining
-    while l2 is not None:
-        temp.next = ListNode(l2.val)
-        l2 = l2.next
-        temp = temp.next
-    return head
+    def reverseList(self):
+        temp = self
+        result = None
+        while temp is not None:
+            t1 = temp.next
+            temp.next = result
+            result = temp
+            temp = t1
+        return result
 
 
-# list1 = ListNode().list_to_node([1, 2, 3, 4, 5])
+# # Linked List Cycle
+# # Floyd’s Cycle-Finding Algorithm
+# def hasCycle(head=ListNode()):
+#     slow_p = fast_p = head
+#     while slow_p and fast_p and fast_p.next:
+#         slow_p = slow_p.next
+#         fast_p = fast_p.next.next
+#         if slow_p == fast_p:
+#             return True
+#     return False
 #
-# print(list1.val)
-# list1 = ListNode(0,ListNode(2,ListNode(5)))
-# print(list1.next.next.val)
-# list2 = [1,[2,[3,[4]]]]
-# print(list2)
-# print(list1.val)
+#
+# head = ListNode().list_to_node([3,2,0,-4])
+# head.next.next.next.next = head.next
+# print(hasCycle(head))
+
+
+# # Palindrome Linked List
+# def isPalindrome(head=ListNode()):
+#     def copy_to_arr(head=ListNode()):
+#         arr = []
+#         while head:
+#             arr.append(head.val)
+#             head = head.next
+#         return arr
+#
+#     arr = copy_to_arr(head)
+#     for i in range(len(arr) // 2):
+#         if arr[i] != arr[-1 - i]:
+#             return False
+#     return True
+#
+#
+# head = ListNode().list_to_node([1, 2, 2, 1])
+# print(isPalindrome(head))
+
+# # Merge Two Sorted Lists
+# def mergeTwoLists(list1=ListNode(), list2=ListNode()):
+#     if list1.val > list2.val:
+#         result = list2
+#         list2 = list2.next
+#     else:
+#         result = list1
+#         list1 = list1.next
+#     temp = result
+#     while list1 and list2:
+#         if list1.val > list2.val:
+#             temp.next = list2
+#             list2 = list2.next
+#         else:
+#             temp.next = list1
+#             list1 = list1.next
+#         temp = temp.next
+#     if list1 is not None:
+#         temp.next = list1
+#     else:
+#         temp.next = list2
+#     return result
+#
+#
+# list1 = ListNode().list_to_node([1, 2, 4])
+# list2 = ListNode().list_to_node([1, 3, 4])
+# list3 = mergeTwoLists(list1, list2)
+# list3.print()
+
+# # Reverse Linked List
+# head = ListNode().list_to_node([1,2,3,4,5])
+# r_head = head.reverseList()
+# r_head.print()
+
+
+# # Remove Nth Node From End of List
+# head = ListNode().list_to_node([1, 2, 3, 4, 5])
+# n = 2
+# head.removeNthFromEnd(n)
+# head.print()
+
+
+# # Delete Node in a Linked List
+# head = ListNode().list_to_node([4,5,1,9])
+# node = ListNode().list_to_node([1])
+# head.del_node(node)
+# head.print()
 
 
 # # String to Integer (atoi)
