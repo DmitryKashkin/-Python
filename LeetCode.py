@@ -1,78 +1,150 @@
-class ListNode:
-    def __init__(self, val=0, nextNode=None):
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
         self.val = val
-        self.next = nextNode
-
-    def list_to_node(self, arr):
-        if len(arr) < 1:
-            return None
-        if len(arr) == 1:
-            self.val = arr[0]
-            return ListNode(arr[0])
-        l0 = temp = ListNode(arr[0])
-        for i in range(1, len(arr)):
-            temp.next = ListNode(arr[i])
-            temp = temp.next
-        return l0
-
-    def del_node(self, node):  # Delete Node in a Linked List
-        while self.next is not None:
-            if node.val == self.next.val:
-                self.next = self.next.next
-                break
-            self = self.next
-
-    def print(self):
-        while self is not None:
-            print(self.val)
-            self = self.next
-
-    def len(self):
-        i = 0
-        while self is not None:
-            i += 1
-            self = self.next
-        return i
-
-    def removeNthFromEnd(self, n):
-        for i in range(self.len()-n-1):
-            self = self.next
-        self.next = self.next.next
+        self.left = left
+        self.right = right
 
 
-def mergeTwoLists(l1: ListNode, l2: ListNode) -> ListNode:
-    # Check if either of the lists is null
-    if l1 is None:
-        return l2
-    if l2 is None:
-        return l1
-    # Choose head which is smaller of the two lists
-    if l1.val < l2.val:
-        temp = head = ListNode(l1.val)
-        l1 = l1.next
-    else:
-        temp = head = ListNode(l2.val)
-        l2 = l2.next
-    # Loop until any of the list becomes null
-    while l1 is not None and l2 is not None:
-        if l1.val < l2.val:
-            temp.next = ListNode(l1.val)
-            l1 = l1.next
-        else:
-            temp.next = ListNode(l2.val)
-            l2 = l2.next
-        temp = temp.next
-    # Add all the nodes in l1, if remaining
-    while l1 is not None:
-        temp.next = ListNode(l1.val)
-        l1 = l1.next
-        temp = temp.next
-    # Add all the nodes in l2, if remaining
-    while l2 is not None:
-        temp.next = ListNode(l2.val)
-        l2 = l2.next
-        temp = temp.next
-    return head
+# Maximum Depth of Binary Tree
+def maxDepth(root = TreeNode()):
+    q = []
+    q.append(root)
+    max = 1
+    while len(q) > 0:
+        node = q.pop(0)
+        if node.left:
+            q.append(node.left)
+        if node.right:
+            q.append(node.right)
+
+
+
+
+# class ListNode:
+#     def __init__(self, val=0, nextNode=None):
+#         self.val = val
+#         self.next = nextNode
+#
+#     def list_to_node(self, arr):
+#         if len(arr) < 1:
+#             return None
+#         if len(arr) == 1:
+#             self.val = arr[0]
+#             return ListNode(arr[0])
+#         l0 = temp = ListNode(arr[0])
+#         for i in range(1, len(arr)):
+#             temp.next = ListNode(arr[i])
+#             temp = temp.next
+#         return l0
+#
+#     def del_node(self, node):  # Delete Node in a Linked List
+#         temp = self
+#         while temp.next is not None:
+#             if node.val == temp.next.val:
+#                 temp.next = temp.next.next
+#                 break
+#             temp = temp.next
+#
+#     def print(self):
+#         temp = self
+#         while temp is not None:
+#             print(temp.val)
+#             temp = temp.next
+#
+#     def len(self):
+#         i, temp = 0, self
+#         while temp is not None:
+#             i += 1
+#             temp = temp.next
+#         return i
+#
+#     def removeNthFromEnd(self, n):
+#         temp = self
+#         for i in range(temp.len() - n - 1):
+#             temp = temp.next
+#         temp.next = temp.next.next
+#
+#     def reverseList(self):
+#         temp = self
+#         result = None
+#         while temp is not None:
+#             t1 = temp.next
+#             temp.next = result
+#             result = temp
+#             temp = t1
+#         return result
+
+
+# # Linked List Cycle
+# # Floyd’s Cycle-Finding Algorithm
+# def hasCycle(head=ListNode()):
+#     slow_p = fast_p = head
+#     while slow_p and fast_p and fast_p.next:
+#         slow_p = slow_p.next
+#         fast_p = fast_p.next.next
+#         if slow_p == fast_p:
+#             return True
+#     return False
+#
+#
+# head = ListNode().list_to_node([3,2,0,-4])
+# head.next.next.next.next = head.next
+# print(hasCycle(head))
+
+
+# # Palindrome Linked List
+# def isPalindrome(head=ListNode()):
+#     def copy_to_arr(head=ListNode()):
+#         arr = []
+#         while head:
+#             arr.append(head.val)
+#             head = head.next
+#         return arr
+#
+#     arr = copy_to_arr(head)
+#     for i in range(len(arr) // 2):
+#         if arr[i] != arr[-1 - i]:
+#             return False
+#     return True
+#
+#
+# head = ListNode().list_to_node([1, 2, 2, 1])
+# print(isPalindrome(head))
+
+# # Merge Two Sorted Lists
+# def mergeTwoLists(list1=ListNode(), list2=ListNode()):
+#     if list1.val > list2.val:
+#         result = list2
+#         list2 = list2.next
+#     else:
+#         result = list1
+#         list1 = list1.next
+#     temp = result
+#     while list1 and list2:
+#         if list1.val > list2.val:
+#             temp.next = list2
+#             list2 = list2.next
+#         else:
+#             temp.next = list1
+#             list1 = list1.next
+#         temp = temp.next
+#     if list1 is not None:
+#         temp.next = list1
+#     else:
+#         temp.next = list2
+#     return result
+#
+#
+# list1 = ListNode().list_to_node([1, 2, 4])
+# list2 = ListNode().list_to_node([1, 3, 4])
+# list3 = mergeTwoLists(list1, list2)
+# list3.print()
+
+# # Reverse Linked List
+# head = ListNode().list_to_node([1,2,3,4,5])
+# r_head = head.reverseList()
+# r_head.print()
 
 
 # # Remove Nth Node From End of List
