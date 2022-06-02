@@ -7,17 +7,57 @@ class TreeNode:
 
 
 # Maximum Depth of Binary Tree
-def maxDepth(root = TreeNode()):
-    q = []
-    q.append(root)
-    max = 1
+def maxDepth0(node):
+    if node is None:
+        return -1;
+
+    else:
+
+        # Compute the depth of each subtree
+        lDepth = maxDepth0(node.left)
+        rDepth = maxDepth0(node.right)
+
+        # Use the larger one
+        if (lDepth > rDepth):
+            return lDepth + 1
+        else:
+            return rDepth + 1
+
+def max_depth(root=TreeNode(), level=1):
+    max_l = max_r = level
+    if root.left:
+        max_l += max_depth(root.left, max_l)
+    if root.right:
+        max_r += max_depth(root.right, max_r)
+    return max(max_l, max_r)
+
+def maxDepth(root=TreeNode()):
+    q = [root, None]
+    depth = 0
     while len(q) > 0:
         node = q.pop(0)
-        if node.left:
-            q.append(node.left)
-        if node.right:
-            q.append(node.right)
+        if node:
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+        else:
+            depth += 1
+            if len(q) > 0:
+                q.append(None)
+    return depth
 
+
+root = TreeNode(3)
+root.left = TreeNode(9)
+root.right = TreeNode(20)
+root.right.left = TreeNode(15)
+root.right.right = TreeNode(7)
+root.left.right = TreeNode(7)
+root.left.left = TreeNode(7)
+print(maxDepth(root))
+print(max_depth(root))
+print(maxDepth0(root))
 
 
 
