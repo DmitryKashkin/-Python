@@ -1,56 +1,146 @@
-class ListNode:
-    def __init__(self, val=0, nextNode=None):
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
         self.val = val
-        self.next = nextNode
+        self.left = left
+        self.right = right
 
-    def list_to_node(self, arr):
-        if len(arr) < 1:
-            return None
-        if len(arr) == 1:
-            self.val = arr[0]
-            return ListNode(arr[0])
-        l0 = temp = ListNode(arr[0])
-        for i in range(1, len(arr)):
-            temp.next = ListNode(arr[i])
-            temp = temp.next
-        return l0
 
-    def del_node(self, node):  # Delete Node in a Linked List
-        temp = self
-        while temp.next is not None:
-            if node.val == temp.next.val:
-                temp.next = temp.next.next
-                break
-            temp = temp.next
+# Maximum Depth of Binary Tree
+def maxDepth0(node):
+    if node is None:
+        return -1;
 
-    def print(self):
-        temp = self
-        while temp is not None:
-            print(temp.val)
-            temp = temp.next
+    else:
 
-    def len(self):
-        i, temp = 0, self
-        while temp is not None:
-            i += 1
-            temp = temp.next
-        return i
+        # Compute the depth of each subtree
+        lDepth = maxDepth0(node.left)
+        rDepth = maxDepth0(node.right)
 
-    def removeNthFromEnd(self, n):
-        temp = self
-        for i in range(temp.len() - n - 1):
-            temp = temp.next
-        temp.next = temp.next.next
+        # Use the larger one
+        if (lDepth > rDepth):
+            return lDepth + 1
+        else:
+            return rDepth + 1
 
-    def reverseList(self):
-        temp = self
-        result = None
-        while temp is not None:
-            t1 = temp.next
-            temp.next = result
-            result = temp
-            temp = t1
-        return result
+def max_depth(root=TreeNode(), level=1):
+    max_l = max_r = level
+    if root.left:
+        max_l += max_depth(root.left, max_l)
+    if root.right:
+        max_r += max_depth(root.right, max_r)
+    return max(max_l, max_r)
+
+def maxDepth(root=TreeNode()):
+    q = [root, None]
+    depth = 0
+    while len(q) > 0:
+        node = q.pop(0)
+        if node:
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+        else:
+            depth += 1
+            if len(q) > 0:
+                q.append(None)
+    return depth
+
+# Validate Binary Search Tree
+def isValidBST(root=TreeNode()):
+    q = [root]
+    while q:
+        node = q.pop(0)
+        if node.left:
+            if node.left.val < node.val < node.right.val:
+                q.append(node.left)
+                q.append(node.right)
+            else:
+                return False
+    return True
+
+# Symmetric Tree
+def isSymmetric(root=TreeNode()):
+    q1 = [root.left, root.right]
+    q2 = []
+    while True:
+        q3 = list(map(lambda x: x.val, q1))
+        if q3 != q3.reverse():
+            return False
+        for i in range(len(q1)):
+            q2.append(q1[i].left)
+            q2.append(q1[i].right)
+        q1 = q2.copy()
+        q2.clear()
+
+
+
+
+
+root = TreeNode(2)
+root.left = TreeNode(1)
+root.right = TreeNode(3)
+# root.right.left = TreeNode(15)
+# root.right.right = TreeNode(7)
+# root.left.right = TreeNode(7)
+# root.left.left = TreeNode(7)
+print(isValidBST(root))
+
+
+# class ListNode:
+#     def __init__(self, val=0, nextNode=None):
+#         self.val = val
+#         self.next = nextNode
+#
+#     def list_to_node(self, arr):
+#         if len(arr) < 1:
+#             return None
+#         if len(arr) == 1:
+#             self.val = arr[0]
+#             return ListNode(arr[0])
+#         l0 = temp = ListNode(arr[0])
+#         for i in range(1, len(arr)):
+#             temp.next = ListNode(arr[i])
+#             temp = temp.next
+#         return l0
+#
+#     def del_node(self, node):  # Delete Node in a Linked List
+#         temp = self
+#         while temp.next is not None:
+#             if node.val == temp.next.val:
+#                 temp.next = temp.next.next
+#                 break
+#             temp = temp.next
+#
+#     def print(self):
+#         temp = self
+#         while temp is not None:
+#             print(temp.val)
+#             temp = temp.next
+#
+#     def len(self):
+#         i, temp = 0, self
+#         while temp is not None:
+#             i += 1
+#             temp = temp.next
+#         return i
+#
+#     def removeNthFromEnd(self, n):
+#         temp = self
+#         for i in range(temp.len() - n - 1):
+#             temp = temp.next
+#         temp.next = temp.next.next
+#
+#     def reverseList(self):
+#         temp = self
+#         result = None
+#         while temp is not None:
+#             t1 = temp.next
+#             temp.next = result
+#             result = temp
+#             temp = t1
+#         return result
 
 
 # # Linked List Cycle
