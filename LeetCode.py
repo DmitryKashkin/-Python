@@ -23,6 +23,7 @@ def maxDepth0(node):
         else:
             return rDepth + 1
 
+
 def max_depth(root=TreeNode(), level=1):
     max_l = max_r = level
     if root.left:
@@ -30,6 +31,7 @@ def max_depth(root=TreeNode(), level=1):
     if root.right:
         max_r += max_depth(root.right, max_r)
     return max(max_l, max_r)
+
 
 def maxDepth(root=TreeNode()):
     q = [root, None]
@@ -47,6 +49,7 @@ def maxDepth(root=TreeNode()):
                 q.append(None)
     return depth
 
+
 # Validate Binary Search Tree
 def isValidBST(root=TreeNode()):
     q = [root]
@@ -60,32 +63,115 @@ def isValidBST(root=TreeNode()):
                 return False
     return True
 
+
 # Symmetric Tree
 def isSymmetric(root=TreeNode()):
     q1 = [root.left, root.right]
     q2 = []
-    while True:
+    while q1.count(None) != len(q1):
         q3 = list(map(lambda x: x.val, q1))
-        if q3 != q3.reverse():
+        if q3 != q3[::-1]:
             return False
-        for i in range(len(q1)):
-            q2.append(q1[i].left)
-            q2.append(q1[i].right)
+        for i in q1:
+            if i.left:
+                q2.append(i.left)
+            if i.right:
+                q2.append(i.right)
         q1 = q2.copy()
         q2.clear()
+    return True
 
 
+# Binary Tree Level Order Traversal
+def levelOrder(root=TreeNode()):
+    result = []
+    q1 = [root]
+    q2 = []
+    while q1:
+        result.append(list(map(lambda x: x.val, q1)))
+        for i in q1:
+            if i.left:
+                q2.append(i.left)
+            if i.right:
+                q2.append(i.right)
+        q1 = q2.copy()
+        q2.clear()
+    return result
 
 
-
-root = TreeNode(2)
-root.left = TreeNode(1)
-root.right = TreeNode(3)
+# root = TreeNode(3)
+# root.left = TreeNode(9)
+# root.right = TreeNode(20)
 # root.right.left = TreeNode(15)
 # root.right.right = TreeNode(7)
-# root.left.right = TreeNode(7)
-# root.left.left = TreeNode(7)
-print(isValidBST(root))
+# root.left.right = TreeNode(4)
+# root.left.left = TreeNode(3)
+# print(levelOrder(root))
+
+
+# Python code to convert a sorted array
+# to a balanced Binary Search Tree
+
+# binary tree node
+class Node:
+    def __init__(self, d):
+        self.data = d
+        self.left = None
+        self.right = None
+
+
+# function to convert sorted array to a
+# balanced BST
+# input : sorted array of integers
+# output: root node of balanced BST
+def sortedArrayToBST(arr):
+    if not arr:
+        return None
+
+    # find middle
+    mid = (len(arr)) // 2
+
+    # make the middle element the root
+    root = Node(arr[mid])
+
+    # left subtree of root has all
+    # values <arr[mid]
+    root.left = sortedArrayToBST(arr[:mid])
+
+    # right subtree of root has all
+    # values >arr[mid]
+    root.right = sortedArrayToBST(arr[mid + 1:])
+    return root
+
+
+# A utility function to print the preorder
+# traversal of the BST
+def preOrder(node):
+    if not node:
+        return
+
+    print(node.data,
+          preOrder(node.left),
+          preOrder(node.right))
+
+
+# driver program to test above function
+"""
+Constructed balanced BST is
+	4
+/ \
+2 6
+/ \ / \
+1 3 5 7
+"""
+
+arr = [1, 2, 3, 4, 5, 6, 7]
+root = sortedArrayToBST(arr)
+print(root.right.right.data)
+# print("PreOrder Traversal of constructed BST ",
+#       preOrder(root))
+
+# This code is contributed by Ishita Tripathi
 
 
 # class ListNode:
