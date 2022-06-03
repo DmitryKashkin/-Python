@@ -47,19 +47,48 @@ def maxDepth(root=TreeNode()):
                 q.append(None)
     return depth
 
+# Validate Binary Search Tree
+def isValidBST(root=TreeNode()):
+    q = [root]
+    while q:
+        node = q.pop(0)
+        if node.left:
+            if node.left.val < node.val < node.right.val:
+                q.append(node.left)
+                q.append(node.right)
+            else:
+                return False
+    return True
 
-root = TreeNode(3)
-root.left = TreeNode(9)
-root.right = TreeNode(20)
-root.right.left = TreeNode(15)
-root.right.right = TreeNode(7)
-root.left.right = TreeNode(7)
-root.left.left = TreeNode(7)
-print(maxDepth(root))
-print(max_depth(root))
-print(maxDepth0(root))
+# Symmetric Tree
+def isSymmetric(root=TreeNode()):
+    q1 = [root.left, root.right]
+    q2 = []
+    while q1.count(None) != len(q1):
+        q3 = list(map(lambda x: x.val, q1))
+        if q3 != q3[::-1]:
+            return False
+        for i in q1:
+            if i.left:
+                q2.append(i.left)
+            if i.right:
+                q2.append(i.right)
+        q1 = q2.copy()
+        q2.clear()
+    return True
 
 
+
+
+
+root = TreeNode(1)
+root.left = TreeNode(2)
+root.right = TreeNode(2)
+root.right.left = TreeNode(4)
+root.right.right = TreeNode(3)
+root.left.right = TreeNode(4)
+root.left.left = TreeNode(3)
+print(isSymmetric(root))
 
 # class ListNode:
 #     def __init__(self, val=0, nextNode=None):
