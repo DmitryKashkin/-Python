@@ -1,178 +1,214 @@
-# Definition for a binary tree node.
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
+# # First Bad Version
+# def isBadVersion(version: int) -> bool:
+#     global bad
+#     if version >= bad:
+#         return True
+#     return False
+#
+# def firstBadVersion(n):
+#     low = 1
+#     high = n
+#     mid = 0
+#     while low <= high:
+#         mid = (low + high) // 2
+#         if isBadVersion(mid):
+#             if isBadVersion(mid - 1):
+#                 high = mid - 1
+#                 continue
+#             else:
+#                 return mid
+#         else:
+#             low = mid + 1
+#     return mid
+#
+#
+# bad = 3
+# n = 777777
+# print(firstBadVersion(n))
 
 
-# Maximum Depth of Binary Tree
-def maxDepth0(node):
-    if node is None:
-        return -1;
-
-    else:
-
-        # Compute the depth of each subtree
-        lDepth = maxDepth0(node.left)
-        rDepth = maxDepth0(node.right)
-
-        # Use the larger one
-        if (lDepth > rDepth):
-            return lDepth + 1
-        else:
-            return rDepth + 1
-
-
-def max_depth(root=TreeNode(), level=1):
-    max_l = max_r = level
-    if root.left:
-        max_l += max_depth(root.left, max_l)
-    if root.right:
-        max_r += max_depth(root.right, max_r)
-    return max(max_l, max_r)
+# # Merge Sorted Array
+# def merge(nums1, m, nums2, n):
+#     if n == 0:
+#         return
+#     j = 0
+#     for i in range(m+n):
+#         if nums1[i] == 0:
+#             nums1[i] = nums2[j]
+#             j += 1
+#             continue
+#         if nums1[i] > nums2[j]:
+#             nums1[i], nums2[j] = nums2[j], nums1[i]
+#
+#
+# nums1 = [0]
+# m = 0
+# nums2 = [1]
+# n = 1
+# merge(nums1, m, nums2, n)
+# print(nums1)
 
 
-def maxDepth(root=TreeNode()):
-    q = [root, None]
-    depth = 0
-    while len(q) > 0:
-        node = q.pop(0)
-        if node:
-            if node.left:
-                q.append(node.left)
-            if node.right:
-                q.append(node.right)
-        else:
-            depth += 1
-            if len(q) > 0:
-                q.append(None)
-    return depth
 
+# # Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+#
+#
+# # Maximum Depth of Binary Tree
+# def maxDepth0(node):
+#     if node is None:
+#         return -1
+#
+#     else:
+#
+#         # Compute the depth of each subtree
+#         lDepth = maxDepth0(node.left)
+#         rDepth = maxDepth0(node.right)
+#
+#         # Use the larger one
+#         if (lDepth > rDepth):
+#             return lDepth + 1
+#         else:
+#             return rDepth + 1
+#
+#
+# def max_depth(root=TreeNode(), level=1):
+#     max_l = max_r = level
+#     if root.left:
+#         max_l += max_depth(root.left, max_l)
+#     if root.right:
+#         max_r += max_depth(root.right, max_r)
+#     return max(max_l, max_r)
+#
+#
+# def maxDepth(root=TreeNode()):
+#     q = [root, None]
+#     depth = 0
+#     while len(q) > 0:
+#         node = q.pop(0)
+#         if node:
+#             if node.left:
+#                 q.append(node.left)
+#             if node.right:
+#                 q.append(node.right)
+#         else:
+#             depth += 1
+#             if len(q) > 0:
+#                 q.append(None)
+#     return depth
+#
+#
+# # Validate Binary Search Tree
+# def isValidBST(root=TreeNode()):
+#     q = [root]
+#     while q:
+#         node = q.pop(0)
+#         if node.left:
+#             if node.left.val < node.val < node.right.val:
+#                 q.append(node.left)
+#                 q.append(node.right)
+#             else:
+#                 return False
+#     return True
+#
+#
+# # Symmetric Tree
+# def isSymmetric(root=TreeNode()):
+#     q1 = [root.left, root.right]
+#     q2 = []
+#     while q1.count(None) != len(q1):
+#         q3 = list(map(lambda x: x.val, q1))
+#         if q3 != q3[::-1]:
+#             return False
+#         for i in q1:
+#             if i.left:
+#                 q2.append(i.left)
+#             if i.right:
+#                 q2.append(i.right)
+#         q1 = q2.copy()
+#         q2.clear()
+#     return True
+#
+#
+# # Binary Tree Level Order Traversal
+# def levelOrder(root=TreeNode()):
+#     result = []
+#     q1 = [root]
+#     q2 = []
+#     while q1:
+#         result.append(list(map(lambda x: x.val, q1)))
+#         for i in q1:
+#             if i.left:
+#                 q2.append(i.left)
+#             if i.right:
+#                 q2.append(i.right)
+#         q1 = q2.copy()
+#         q2.clear()
+#     return result
+#
+#
+# # root = TreeNode(3)
+# # root.left = TreeNode(9)
+# # root.right = TreeNode(20)
+# # root.right.left = TreeNode(15)
+# # root.right.right = TreeNode(7)
+# # root.left.right = TreeNode(4)
+# # root.left.left = TreeNode(3)
+# # print(levelOrder(root))
+#
+#
+# # Python code to convert a sorted array
+# # to a balanced Binary Search Tree
 
-# Validate Binary Search Tree
-def isValidBST(root=TreeNode()):
-    q = [root]
-    while q:
-        node = q.pop(0)
-        if node.left:
-            if node.left.val < node.val < node.right.val:
-                q.append(node.left)
-                q.append(node.right)
-            else:
-                return False
-    return True
-
-
-# Symmetric Tree
-def isSymmetric(root=TreeNode()):
-    q1 = [root.left, root.right]
-    q2 = []
-    while q1.count(None) != len(q1):
-        q3 = list(map(lambda x: x.val, q1))
-        if q3 != q3[::-1]:
-            return False
-        for i in q1:
-            if i.left:
-                q2.append(i.left)
-            if i.right:
-                q2.append(i.right)
-        q1 = q2.copy()
-        q2.clear()
-    return True
-
-
-# Binary Tree Level Order Traversal
-def levelOrder(root=TreeNode()):
-    result = []
-    q1 = [root]
-    q2 = []
-    while q1:
-        result.append(list(map(lambda x: x.val, q1)))
-        for i in q1:
-            if i.left:
-                q2.append(i.left)
-            if i.right:
-                q2.append(i.right)
-        q1 = q2.copy()
-        q2.clear()
-    return result
-
-
-# root = TreeNode(3)
-# root.left = TreeNode(9)
-# root.right = TreeNode(20)
-# root.right.left = TreeNode(15)
-# root.right.right = TreeNode(7)
-# root.left.right = TreeNode(4)
-# root.left.left = TreeNode(3)
-# print(levelOrder(root))
-
-
-# Python code to convert a sorted array
-# to a balanced Binary Search Tree
-
-# binary tree node
-class Node:
-    def __init__(self, d):
-        self.data = d
-        self.left = None
-        self.right = None
-
-
-# function to convert sorted array to a
-# balanced BST
-# input : sorted array of integers
-# output: root node of balanced BST
-def sortedArrayToBST(arr):
-    if not arr:
-        return None
-
-    # find middle
-    mid = (len(arr)) // 2
-
-    # make the middle element the root
-    root = Node(arr[mid])
-
-    # left subtree of root has all
-    # values <arr[mid]
-    root.left = sortedArrayToBST(arr[:mid])
-
-    # right subtree of root has all
-    # values >arr[mid]
-    root.right = sortedArrayToBST(arr[mid + 1:])
-    return root
-
-
-# A utility function to print the preorder
-# traversal of the BST
-def preOrder(node):
-    if not node:
-        return
-
-    print(node.data,
-          preOrder(node.left),
-          preOrder(node.right))
-
-
-# driver program to test above function
-"""
-Constructed balanced BST is
-	4
-/ \
-2 6
-/ \ / \
-1 3 5 7
-"""
-
-arr = [1, 2, 3, 4, 5, 6, 7]
-root = sortedArrayToBST(arr)
-print(root.right.right.data)
-# print("PreOrder Traversal of constructed BST ",
-#       preOrder(root))
-
-# This code is contributed by Ishita Tripathi
-
+## binary tree node
+# class Node:
+#     def __init__(self, d):
+#         self.data = d
+#         self.left = None
+#         self.right = None
+#
+#
+# # function to convert sorted array to a
+# # balanced BST
+# # input : sorted array of integers
+# # output: root node of balanced BST
+# def sortedArrayToBST(arr):
+#     if not arr:
+#         return None
+#
+#     # find middle
+#     mid = (len(arr)) // 2
+#
+#     # make the middle element the root
+#     root = Node(arr[mid])
+#
+#     # left subtree of root has all
+#     # values <arr[mid]
+#     root.left = sortedArrayToBST(arr[:mid])
+#
+#     # right subtree of root has all
+#     # values >arr[mid]
+#     root.right = sortedArrayToBST(arr[mid + 1:])
+#     return root
+#
+# # driver program to test above function
+# """
+# Constructed balanced BST is
+# 	4
+# / \
+# 2 6
+# / \ / \
+# 1 3 5 7
+# """
+#
+# arr = [1, 2, 3, 4, 5, 6, 7]
+# root = sortedArrayToBST(arr)
+# print(root.right.right.data)
+#
 
 # class ListNode:
 #     def __init__(self, val=0, nextNode=None):
