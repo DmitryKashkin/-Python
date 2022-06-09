@@ -5,13 +5,16 @@ def len_str(string0=''):
         j += 1
     print(j)
 
-def new_str(str0 = ''):
+
+def new_str(str0=''):
     if len(str0) < 2:
         return ''
     return str0[0:2] + str0[-2:]
 
+
 def replace_str(str0='', sym=''):
     return str0.replace(sym, '$')
+
 
 def revers_str(str0=''):
     # str0 = list(str0)
@@ -19,41 +22,122 @@ def revers_str(str0=''):
     # return ''.join(str0)
     return str0[::-1]
 
+
 def count(str0=''):
     key = set(str0)
     val = [str0.count(c) for c in key]
     return dict(zip(key, val))
 
+
 def split_str(str0=''):
     # str1 = ''.join([])
     return str0[::2], str0[1::2]
 
+
 def del_str(str0='', str1=''):
     return str0.replace(str1, '')
+
 
 def upper_lower(str0=''):
     return str0.upper(), str0.lower()
 
+
 def index_str(str0=''):
     return dict(zip(str0, range(len(str0))))
 
-def is_str(str0='', str1 = ''):
+
+def is_str(str0='', str1=''):
     return str1 in str0
 
+
 def symbol_in_str(str0=''):
-    key = set(str0)
-    val = [str0.count(c) for c in key]
-    return dict(zip(key, val))
+    keys = set(str0)
+    val = [str0.count(c) for c in keys]
+    symbols = dict(zip(keys, val))
+    max_val = max(val)
+    for i in symbols:
+        if symbols[i] == max_val:
+            return i
 
 
-
-str0 = 'Выведите'
-str1 = 'еди'
-print(is_str(str0, str1))
+def swapcase_str(str0: str) -> str:
+    return str0.swapcase()
 
 
+def sum_list(list0: list) -> int:
+    sum0 = sum1 = 0
+    for i in list0:
+        sum0 += i
+    return sum0
 
 
+def multiply(list0: list, x: int) -> list:
+    list0 = [i * x for i in list0]
+    return list0
+
+
+def min_max(list0: list) -> tuple:
+    return min(list0), max(list0)
+
+
+def rm_duplicates(list0: list) -> list:
+    for i in list0:
+        if list0.count(i) > 1:
+            list0.remove(i)
+    return list0
+
+
+def list_copy(list0: list) -> tuple:
+    list1 = list0.copy()
+    list2 = [i for i in list0]
+    list3 = list0[::]
+    return list1, list2, list3
+
+
+def merge_list(list0: list, list1: list):
+    list3 = list0 + list1
+    print(list3)
+    list0.extend(list1)
+    print(list0)
+
+
+def swap_item(list0: list, n: int):
+    if n + 1 > len(list0) - 1:
+        print('error')
+        return
+    list0[n], list0[n + 1] = list0[n + 1], list0[n]
+    print(list0)
+
+
+def list_to_numbr(list0: list):
+    return int(''.join([str(i) for i in list0]))
+
+
+def dict_init():
+    dict1 = {0: 10, 1: 20}
+    dict1[2], dict1[3] = 30, 40
+    print(dict1)
+    dict1 = dict(key1='val', key2='val')
+    print(dict1)
+
+
+def merge_dict(dict1: dict, dict2: dict):
+    dict3 = {}
+    dict3.update(dict1)
+    dict3.update(dict2)
+    return dict3
+
+
+def is_key_from_dict(dict0: {}, key):
+    for i in dict0:
+        if i == key:
+            return True
+    return False
+
+
+dict1 = {1: 1, 2: 2}
+dict2 = {3: 3, 4: 4}
+print(is_key_from_dict(dict1, 3))
 
 """
 1. Выведите все символы из строки
@@ -129,7 +213,7 @@ def nums_1_10():  # 5
         i += 3
 
 
-def count_3(): #6
+def count_3():  # 6
     count1 = 0
     for i in [3, 0, 1, 3, 0, 4, 3, 3, 4, 56, 6, 1, 3]:
         if i == 3:
@@ -142,9 +226,6 @@ def count_3(): #6
         i += 1
     count3 = list0.count(3)
     return count1, count2, count3
-
-
-
 
 # string1 = 'Данная часть была посвящена больше синтаксису Python и вопросам документации кода'
 # print(count_3())
