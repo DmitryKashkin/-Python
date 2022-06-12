@@ -128,17 +128,145 @@ def merge_dict(dict1: dict, dict2: dict):
     return dict3
 
 
-def is_key_from_dict(dict0: {}, key):
+def is_key_from_dict(dict0: dict, key):
     for i in dict0:
         if i == key:
             return True
     return False
 
 
-dict1 = {1: 1, 2: 2}
-dict2 = {3: 3, 4: 4}
-print(is_key_from_dict(dict1, 3))
+def rm_key_from_dict(dict0: dict, key):
+    return dict0.pop(key, 'Nicht verstehe')
 
+
+def min_max_from_dict(dict0: dict):
+    dict_val = list(dict0.values())
+    return min(dict_val), max(dict_val)
+
+
+def create_tuple():
+    tuple1 = (1, 2, 3, 4, 5)
+    tuple2 = tuple('67890')
+    (a, b, c, d, e) = tuple1
+    (f, g, h, i, j) = tuple2
+    print(tuple1, tuple2, a, b, c, d, e, f, g, h, i, j)
+
+
+def val_t_add(tuple1: tuple, val):
+    list0 = list(tuple1)
+    list0.append(val)
+    return tuple(list0)
+
+
+def convert_to_tuple(list1: list):
+    return tuple(list1)
+
+
+def dict_from_tuple(tuple1: tuple):
+    return {i: i for i in tuple1}
+
+
+def tuple_count(list0: list):
+    count_t = 0
+    for i in list0:
+        if type(i) == type(tuple()):
+            count_t += 1
+    return count_t
+
+
+def create_set():
+    a = set('12345')
+    b = {1, 2, 3, 4, 5}
+    c = {i for i in b}
+    print(a, b, c)
+
+
+def set_add(set1: set, elem1):
+    set1.add(elem1)
+
+
+def set_discard(set1: set, elem1):
+    set1.discard(elem1)
+
+
+def list_to_set_list(list1: list):
+    return list(set(list1))
+
+
+def merge_set(set1: set, set2: set):
+    return set1 | set2
+
+
+def is_elem_set(set1: set, elem):
+    return elem in set1
+
+
+def write_text_to_file(text1: str):
+    my_file = open('text.txt', 'w')
+    my_file.write(text1)
+    my_file.close()
+
+
+def read_file():
+    my_file = open('text.txt', 'r')
+    text1 = my_file.readlines()
+    my_file.close()
+    return text1
+
+
+def append_file(text1):
+    my_file = open('text.txt', 'a+')
+    print(my_file.readlines())
+    my_file.write(text1)
+    print(text1)
+    print(my_file.readlines())
+
+
+def read_n_of_end(n):
+    my_file = open('text.txt', 'r')
+    my_text = my_file.readlines()
+    print(my_text[-n:])
+
+
+def len_file():
+    my_file = open('text.txt', 'r')
+    my_text = my_file.readlines()
+    print('в файле ', len(my_text), 'сторк')
+
+
+def word_in_file(file0: str):
+    my_file = open(file0, 'r')
+    my_text = my_file.read()
+
+    def cler_my_text(my_text):
+        my_text = my_text.replace('.', ' ')
+        my_text = my_text.replace('\n', ' ')
+        my_text = my_text.replace(',', ' ')
+        my_text = my_text.replace('  ', ' ')
+        my_text = my_text.split(' ')
+        my_text.pop()
+        return my_text
+
+    my_text = cler_my_text(my_text)
+    my_set = list(set(my_text))
+    my_count = [my_text.count(i) for i in my_set]
+    my_max = max(my_count)
+    for i in range(len(my_count)):
+        if my_count[i] == my_max:
+            print(my_set[i], my_count[i])
+
+
+def file_copy(my_file):
+    my_copy_file_name = my_file.replace('.txt', '_copy.txt')
+    my_file = open(my_file, 'r')
+    my_file_copy = open(my_copy_file_name, 'w')
+    my_file_copy.write(my_file.read())
+
+
+
+
+my_file = 'text.txt'
+file_copy(my_file)
 
 """
 1. Выведите все символы из строки
