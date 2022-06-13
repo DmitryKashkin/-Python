@@ -422,6 +422,50 @@ def my_sum(my_list: list):
     print(sum(my_list))
 
 
+def my_sum_div_by_3(my_list: list):
+    total = 0
+    for i in range(len(my_list)):
+        if i % 3 == 0:
+            total += my_list[i]
+    print(total)
+    total = i = 0
+    while i < len(my_list):
+        if i % 3 == 0:
+            total += my_list[i]
+        i += 1
+    print(total)
+
+
+def my_list_from_23_to_35():
+    print([i for i in range(23, 35)])
+
+
+def list_3_15_step_4():
+    print([i for i in range(3, 15, 4)])
+
+
+def list_3_25_div_by_3():
+    print([i for i in range(3, 25) if i % 3 == 0])
+
+
+def create_dict(list1: list, list2: list):
+    print(dict(zip(list1, list2)))
+
+
+def season():
+    month = input('введите число (месяц)')
+    seasons = {'зима': [12, 1, 2], 'весна': [3, 4, 5], 'лето': [6, 7, 8], 'осень': [9, 10, 11]}
+    for months in seasons:
+        if int(month) in seasons[months]:
+            print(months)
+            return
+
+
+def m_table():
+    multiplier = int(input("введите число от 1 до 9"))
+    print([multiplier * i for i in range(1,10)])
+
 my_string = 'список доступных атрибутов'
 my_list = [3, 0, 1, 3, 0, 4, 3, 3, 4, 5, 6, 6, 1, 3]
-my_sum(my_list)
+list2 = [2, 4, 7, 26, 33]
+m_table()
