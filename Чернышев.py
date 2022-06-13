@@ -65,7 +65,7 @@ def swapcase_str(str0: str) -> str:
 
 
 def sum_list(list0: list) -> int:
-    sum0 = sum1 = 0
+    sum0 = 0
     for i in list0:
         sum0 += i
     return sum0
@@ -169,10 +169,13 @@ def dict_from_tuple(tuple1: tuple):
 def tuple_count(list0: list):
     count_t = 0
     for i in list0:
-        if type(i) == type(tuple()):
+        # if type(i) == type(tuple()):
+        if type(i) is tuple:
             count_t += 1
     return count_t
 
+
+# print(tuple_count([1,2,3,4,(1,2)]))
 
 def create_set():
     a = set('12345')
@@ -261,12 +264,39 @@ def file_copy(my_file):
     my_file = open(my_file, 'r')
     my_file_copy = open(my_copy_file_name, 'w')
     my_file_copy.write(my_file.read())
+    my_file.close()
+    my_file_copy.close()
 
 
+def dict_to_file_to_dict(my_file_name: str, my_dict: dict):
+    import pickle
+    my_file = open(my_file_name, 'wb')
+    pickle.dump(my_dict, my_file)
+    my_file.close()
+    my_file = open(my_file_name, 'rb')
+    my_dict = pickle.load(my_file)
+    print(my_dict)
 
 
-my_file = 'text.txt'
-file_copy(my_file)
+def list_to_file_to_list(my_file_name: str, my_list: list):
+    import pickle
+    my_file = open(my_file_name, 'wb')
+    pickle.dump(my_list, my_file)
+    my_file.close()
+    my_file = open(my_file_name, 'rb')
+    my_list = pickle.load(my_file)
+    print(my_list)
+
+
+def dict_to_file_to_dict_json(my_file_name: str, my_dict: dict):
+    import json
+    json.dump(my_dict, fp=open(my_file_name, 'w'), indent=5)
+    my_json = json.load(open(my_file_name))
+    print(my_json)
+
+
+# my_file = 'my_dict.json'
+# dict_to_file_to_dict_json(my_file, {1: 1, 2: 2, 3: 3})
 
 """
 1. Выведите все символы из строки
@@ -299,7 +329,8 @@ file_copy(my_file)
 11.
 Напишите программу, выводящую сумму элементов списка [3 01 304334 56 61 3], используя цикл for, while и метод sum.
 12.
-Напишите программу, выводящую сумму элементов списка [3 01304334 56 613], значения индексов которых делятся на без остатка на 3, используя цикл for и while.
+Напишите программу, выводящую сумму элементов списка [3 01304334 56 613], значения индексов которых делятся 
+на без остатка на 3, используя цикл for и while.
 13.
 Сформируйте список, значения элементов которого находятся в диапазоне от 23 до 35.
 92
@@ -308,7 +339,8 @@ file_copy(my_file)
 15.
 Сформируйте список, значения элементов которого находятся в диапазоне от 3 до 25 и без остатка делятся на 3.
 16.
-Сформируйте словарь из двух списков [3 01 3 0 4 3 3 4 56 6 1 3] и [2, 4,7,26,33], используя встроенную функцию zip. Выведите словарь в консоль и объясните, почему он получился такого вида.
+Сформируйте словарь из двух списков [3 01 3 0 4 3 3 4 56 6 1 3] и [2, 4,7,26,33], используя встроенную функцию zip. 
+Выведите словарь в консоль и объясните, почему он получился такого вида.
 17.
 Выведите различными способами в консоль элементы списка [3 01304334 56 6 1 3] с их индексами.
 18.
@@ -354,7 +386,42 @@ def count_3():  # 6
             count2 += 1
         i += 1
     count3 = list0.count(3)
-    return count1, count2, count3
+    print(count1, count2, count3)
 
-# string1 = 'Данная часть была посвящена больше синтаксису Python и вопросам документации кода'
-# print(count_3())
+
+def string_to_list(my_string: str):
+    my_list = my_string.split(' ')
+    print(my_list)
+    my_list = [i for i in my_string]
+    print(my_list)
+
+
+def make_matrix(n: int):
+    my_matrix = [[i for i in range(n)] for _ in range(n)]
+    print(my_matrix)
+
+
+def print_list_revers(my_list: list):
+    print(my_list[::-1])
+
+
+def print_numbers_1_9_not_5_7():
+    print([i for i in range(1, 10) if i != 5 and i != 7])
+
+
+def my_sum(my_list: list):
+    total = 0
+    for i in my_list:
+        total += i
+    print(total)
+    total = i = 0
+    while i < len(my_list):
+        total += my_list[i]
+        i += 1
+    print(total)
+    print(sum(my_list))
+
+
+my_string = 'список доступных атрибутов'
+my_list = [3, 0, 1, 3, 0, 4, 3, 3, 4, 5, 6, 6, 1, 3]
+my_sum(my_list)
