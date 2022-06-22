@@ -560,4 +560,25 @@ def my_func(a, b, c):
     return a * b ** c
 
 
-print(my_func(1, 2, 3))
+def generator_23_37():
+    for _ in range(23, 37):
+        yield _
+
+
+def generator_5_37_step_4():
+    for _ in range(5, 37, 4):
+        yield _
+
+
+i = (_ for _ in range(0, 15))
+
+my_list = [3, 0, 1, 3, 0, 4, 3, 3, 4, 56, 6, 13]
+my_iter = (_ ** 2 for _ in my_list)
+
+
+def custom_generator(step=1):
+    for _ in range(0, 100, step):
+        yield _
+
+
+print(list(custom_generator(10)))
