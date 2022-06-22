@@ -463,9 +463,76 @@ def season():
 
 def m_table():
     multiplier = int(input("введите число от 1 до 9"))
-    print([multiplier * i for i in range(1,10)])
+    print([multiplier * i for i in range(1, 10)])
 
-my_string = 'список доступных атрибутов'
-my_list = [3, 0, 1, 3, 0, 4, 3, 3, 4, 5, 6, 6, 1, 3]
-list2 = [2, 4, 7, 26, 33]
-m_table()
+
+def max_3(a, b, c):
+    return max(a, b, c)
+
+
+def sum_list_2(list0: list):
+    print(sum(list0))
+
+
+def multipl(list0: list):
+    if list0:
+        return list0[0] * multipl(list0[1:])
+    else:
+        return 1
+
+
+def invert_str(string: str):
+    print(string[::-1])
+
+
+def factorial(n: int):
+    if n:
+        return n * factorial(n - 1)
+    else:
+        return 1
+
+
+def up_low_case(my_str: str, up_count=0, low_count=0):
+    if not my_str:
+        return up_count, low_count
+    if my_str[0].islower():
+        low_count += 1
+        return up_low_case(my_str[1:], up_count, low_count)
+    if my_str[0].isupper():
+        up_count += 1
+        return up_low_case(my_str[1:], up_count, low_count)
+    return up_low_case(my_str[1:], up_count, low_count)
+
+
+def rm_duble(my_list: list):
+    return set(my_list)
+
+
+def print_even(my_list: list):
+    print([my_list[_] for _ in range(len(my_list)) if _ % 2 == 0])
+
+
+def is_palindrome(my_str: str):
+    print(my_str == my_str[::-1])
+
+
+def tag_b(my_func):
+    def wrap(*args, **kwargs):
+        return '<b>' + my_func(*args, **kwargs) + '</b'
+    return wrap
+
+
+@tag_b
+def print_str(my_str: str):
+    return my_str
+
+
+def square_decorator(my_func):
+    def wrap(*args, **kwargs):
+        return my_func(*args, **kwargs) ** 2
+    return wrap
+
+
+max_3 = square_decorator(max_3)
+
+print(max_3(1,2,3))
