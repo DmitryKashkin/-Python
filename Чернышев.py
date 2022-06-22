@@ -482,7 +482,7 @@ def multipl(list0: list):
 
 
 def invert_str(string: str):
-    print(string[::-1])
+    return string[::-1]
 
 
 def factorial(n: int):
@@ -519,6 +519,7 @@ def is_palindrome(my_str: str):
 def tag_b(my_func):
     def wrap(*args, **kwargs):
         return '<b>' + my_func(*args, **kwargs) + '</b'
+
     return wrap
 
 
@@ -530,9 +531,33 @@ def print_str(my_str: str):
 def square_decorator(my_func):
     def wrap(*args, **kwargs):
         return my_func(*args, **kwargs) ** 2
+
     return wrap
 
 
 max_3 = square_decorator(max_3)
 
-print(max_3(1,2,3))
+
+def upper_decorator(my_func):
+    def wrap(*args, **kwargs):
+        return my_func(*args, **kwargs).upper()
+
+    return wrap
+
+
+invert_str = upper_decorator(invert_str)
+
+
+def my_decorator(my_func):
+    def wrap(*args, **kwargs):
+        print(*args, **kwargs)
+
+    return wrap
+
+
+@my_decorator
+def my_func(a, b, c):
+    return a * b ** c
+
+
+print(my_func(1, 2, 3))
