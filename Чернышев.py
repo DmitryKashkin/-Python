@@ -1,3 +1,6 @@
+import sys
+
+
 def len_str(string0=''):
     print(len(string0))
     j = 0
@@ -581,4 +584,12 @@ def custom_generator(step=1):
         yield _
 
 
-print(list(custom_generator(10)))
+
+if __name__ == '__main__':
+    sys.path.append('qwer')
+    print(sys.path)
+
+    ...
+    # print(dir(imp))
+    # print(my_dict['a'](5))
+    # print(list(a for a in sys.__dict__.keys() if not a.startswith('__') ) )
