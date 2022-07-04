@@ -584,12 +584,64 @@ def custom_generator(step=1):
         yield _
 
 
+from my_math_modul import *
+import my_modul
+
+
+class TestClass:
+    def my_func(self):
+        c = 3
+        c += 1
+        return c
+
+    a = 2
+
+
+class Shape:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
+class BaseTextTest:
+    name2 = 12
+
+    def __init__(self):
+        self.name = 11
+
+
+class MyMath:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def sum(self, a, b):
+        return a + b
+
+    def sub(self, a, b):
+        return a - b
+
+    def mul(self, a, b):
+        return a * b
+
+    def div(self, a, b):
+        return a / b
+
+
+class sqare:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+        self.s = a * b
+
+    def __lt__(self, other):
+        return self.s < other.s
+
+    def __eq__(self, other):
+        return self.s == other.s
+
 
 if __name__ == '__main__':
-    sys.path.append('qwer')
-    print(sys.path)
-
-    ...
-    # print(dir(imp))
-    # print(my_dict['a'](5))
-    # print(list(a for a in sys.__dict__.keys() if not a.startswith('__') ) )
+    fig1 = sqare(2, 3)
+    fig2 = sqare(3, 2)
+    print(fig1 == fig2)
