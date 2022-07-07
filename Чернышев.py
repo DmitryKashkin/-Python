@@ -628,20 +628,81 @@ class MyMath:
         return a / b
 
 
-class sqare:
+class Sqare:
     def __init__(self, a, b):
-        self.a = a
-        self.b = b
-        self.s = a * b
+        self.__a = a
+        self.__b = b
+        self.__s = a * b
 
     def __lt__(self, other):
-        return self.s < other.s
+        return self.__s < other.__s
 
     def __eq__(self, other):
-        return self.s == other.s
+        return self.__s == other.__s
+
+    @property
+    def a(self):
+        return self.__a
+
+    @a.setter
+    def a(self, a):
+        self.__a = a
+        self.__s = a * self.__b
+        print(self.__a, self.__b, self.__s)
+
+    @property
+    def area(self):
+        return self.__s
+
+
+import json
+
+
+class Json:
+
+    def __init__(self, file_name):
+        self.file_name = file_name
+        self.dict = json.load(open(self.file_name))
+
+    def read(self):
+        return self.dict['base']
+
+    def write(self):
+        json.dump(self.dict, fp=open(self.file_name, 'w'), indent=5)
+
+    def __str__(self):
+        return str(json.load(open(self.file_name))['base'][1])
+
+    def add(self, pos, key, val):
+        self.dict['base'][pos - 1][key] = val
+
+    def delete(self, pos, key):
+        del (self.dict['base'][pos - 1][key])
+
+    def modify(self, pos, key, val):
+        self.dict['base'][pos - 1][key] = val
+
+    # def dict_to_file_to_dict_json(my_file_name: str, my_dict: dict):
+    #     import json
+    #     json.dump(my_dict, fp=open(my_file_name, 'w'), indent=5)
+    #     my_json = json.load(open(my_file_name))
+    #     print(my_json)
+
+    ...
+
+
+class SquareMax:
+    def __init__(self, squares: list):
+        self.__max = max(squares, key=lambda _: _.area)
+
+    def __str__(self):
+        return str(self.__max.area)
 
 
 if __name__ == '__main__':
-    fig1 = sqare(2, 3)
-    fig2 = sqare(3, 2)
-    print(fig1 == fig2)
+    my_shape = Sqare(2, 3)
+    my_shape2 = Sqare(3, 3)
+    my_shape3 = Sqare(3, 4)
+    squares = [my_shape, my_shape2, my_shape3]
+    s_max = SquareMax(squares)
+    print(s_max)
