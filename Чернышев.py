@@ -699,10 +699,91 @@ class SquareMax:
         return str(self.__max.area)
 
 
+class Numbers:
+    def __init__(self, number):
+        if isinstance(number, int):
+            self.dec = number
+            self.binary = bin(number)
+        else:
+            self.binary = number
+            self.dec = int(number, base=2)
+
+
+class Nod:
+    def __init__(self, a, b):
+        self.__a = a
+        self.__b = b
+
+    @property
+    def a(self):
+        return self.__a
+
+    @a.setter
+    def a(self, a):
+        self.__a = a
+
+    @property
+    def b(self):
+        return self.__b
+
+    @b.setter
+    def b(self, b):
+        self.__b = b
+
+    def nod(self):
+        self.__nod = 1
+        for i in range(2, min(self.__a, self.__b)):
+            if (not (self.__a % i)) and (not (self.__b % i)):
+                self.__nod = i
+                break
+        return self.__nod
+
+
+class QuadraticEquation:
+    def __init__(self, a=1, b=0, c=0):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.__D = self.b ** 2 - 4 * a * c
+        if self.__D >= 0:
+            self.x1 = (-b + self.__D ** 0.5) / (2 * a)
+            self.x2 = (-b - self.__D ** 0.5) / (2 * a)
+        elif self.__D < 0:
+            self.x1 = self.x2 = None
+
+
+class Member:
+    def __init__(self, first_name, last_name):
+        self.propertys = {'first_name': first_name, 'last_name': last_name}
+
+
+class Notebook:
+    def __init__(self, file_name):
+        self.note = []
+        self.file_name = file_name
+
+
+    def __getattr__(self, item):
+        print(str(item)+' is not defained')
+        return str(item)+' is not defained'
+
+    def __str__(self):
+        return str(self.note)
+
+    def add_note(self, fio, tel, e_mail, dr):
+        self.note.append({'fio': fio, 'tel': tel, 'e_mail': e_mail, 'dr': dr})
+
+    def load(self):
+        self.note = json.load(open(self.file_name))
+
+    def save(self):
+        json.dump(self.note, fp=open(self.file_name, 'w'), indent=5)
+
+
 if __name__ == '__main__':
-    my_shape = Sqare(2, 3)
-    my_shape2 = Sqare(3, 3)
-    my_shape3 = Sqare(3, 4)
-    squares = [my_shape, my_shape2, my_shape3]
-    s_max = SquareMax(squares)
-    print(s_max)
+    my_notebook = Notebook('my_notebook.json')
+    my_notebook.load()
+    my_notebook.add_note('Sidor Sidorov', '555-55-55', 'sidor@ms.com', '05-05-1955')
+    my_notebook.save()
+    # my_notebook.name = 1234
+    print(my_notebook.name)
