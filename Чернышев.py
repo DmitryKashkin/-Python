@@ -610,24 +610,6 @@ class BaseTextTest:
         self.name = 11
 
 
-class MyMath:
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
-
-    def sum(self, a, b):
-        return a + b
-
-    def sub(self, a, b):
-        return a - b
-
-    def mul(self, a, b):
-        return a * b
-
-    def div(self, a, b):
-        return a / b
-
-
 class Sqare:
     def __init__(self, a, b):
         self.__a = a
@@ -762,10 +744,9 @@ class Notebook:
         self.note = []
         self.file_name = file_name
 
-
     def __getattr__(self, item):
-        print(str(item)+' is not defained')
-        return str(item)+' is not defained'
+        print(str(item) + ' is not defained')
+        return str(item) + ' is not defained'
 
     def __str__(self):
         return str(self.note)
@@ -780,10 +761,137 @@ class Notebook:
         json.dump(self.note, fp=open(self.file_name, 'w'), indent=5)
 
 
+def intro_function(text, index): print(text[index])
+
+
+class MyMath:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    def sum(self):
+        return self.a + self.b
+
+    def sub(self):
+        return self.a - self.b
+
+    def mul(self):
+        return self.a * self.b
+
+    def div(self):
+        return self.a / self.b
+
+
+class MyExeption(Exception):
+    ...
+
+
+class MyMathExceptIfArg0(MyMath):
+    def __init__(self, a, b):
+        super().__init__(a, b)
+
+    def __getattribute__(self, item):
+        if object.__getattribute__(self, 'a') == 0 or object.__getattribute__(self, 'b') == 0:
+            raise MyExeption('Argument a or b is 0')
+        return object.__getattribute__(self, item)
+
+
+class MyMathZeroToOne(MyMath):
+    """Напишите класс, реализующий такие арифметические действия, как деление и умножение.
+    Если одно из значений при вызове операции равно нулю, генерируется исключение,
+    значение ноль меняется на 1 и вычисление операции продолжается."""
+
+    def __init__(self, a, b):
+        super().__init__(a, b)
+
+    def if_zero_decorator(func):
+        def wrapper(self):
+            try:
+                if self.a != 0 and self.b != 0:
+                    return func(self)
+                if self.a == 0:
+                    self.a = 1
+                if self.b == 0:
+                    self.b = 1
+                raise MyExeption('Argument a or b is 0')
+            except MyExeption as my_ex:
+                print(my_ex)
+                return func(self)
+
+        return wrapper
+
+    @property
+    @if_zero_decorator
+    def mul(self):
+        return self.a * self.b
+
+    @property
+    @if_zero_decorator
+    def div(self):
+        return self.a / self.b
+
+
+def if_zero_decorator(class_method):
+    def wrapper(self):
+        try:
+            if self.a != 0 and self.b != 0:
+                return class_method(self)
+            if self.a == 0:
+                self.a = 1
+            if self.b == 0:
+                self.b = 1
+            raise MyExeption('Argument a or b is 0')
+        except MyExeption as my_ex:
+            print(my_ex)
+            return class_method(self)
+
+    return wrapper
+
+
+class MyMathZeroToOne2(MyMath):
+    """Напишите класс, реализующий такие арифметические действия, как деление и умножение.
+    Если одно из значений при вызове операции равно нулю, генерируется исключение,
+    значение ноль меняется на 1 и вычисление операции продолжается."""
+
+    def __init__(self, a, b):
+        super().__init__(a, b)
+
+    @property
+    @if_zero_decorator
+    def mul(self):
+        return self.a * self.b
+
+    @property
+    @if_zero_decorator
+    def div(self):
+        return self.a / self.b
+
+
+def up_case(_: str) -> str:
+    try:
+        if _ == '':
+            raise Exception('str is none')
+    except Exception as my_ex:
+        print(my_ex)
+        return ''
+    return _.upper()
+
+
+def is_member(my_list: list, item) -> bool:
+    if len(my_list) == 0:
+        raise Exception('list is empty')
+    return item in my_list
+
+
+class Exception_If_P(Exception):
+    ...
+
+
+def test_p_exception(my_string: str):
+    if 'p' in my_string:
+        raise Exception_If_P
+
+
 if __name__ == '__main__':
-    my_notebook = Notebook('my_notebook.json')
-    my_notebook.load()
-    my_notebook.add_note('Sidor Sidorov', '555-55-55', 'sidor@ms.com', '05-05-1955')
-    my_notebook.save()
-    # my_notebook.name = 1234
-    print(my_notebook.name)
+    my_string = 'gfsfpgdsfg'
+    test_p_exception(my_string)
