@@ -776,7 +776,8 @@ class MyMath:
         return self.a - self.b
 
     def mul(self):
-        return self.a * self.b
+        self.result = self.a * self.b
+        return self.result
 
     def div(self):
         return self.a / self.b
@@ -859,7 +860,8 @@ class MyMathZeroToOne2(MyMath):
     @property
     @if_zero_decorator
     def mul(self):
-        return self.a * self.b
+        super().mul()
+        return self.result
 
     @property
     @if_zero_decorator
@@ -892,6 +894,201 @@ def test_p_exception(my_string: str):
         raise Exception_If_P
 
 
+from threading import Thread
+from multiprocessing import Process, Manager, Event
+
+
+def file_read(file_name: str, box: list, event: Event):
+    print('read start')
+    mode = 'rb'
+    with open(file_name, mode) as file_source:
+        box[0] = file_source.read()
+        print('read stop')
+    # print(box[0])
+    event.set()
+
+
+def file_write(file_name: str, box: list, event: Event) -> None:
+    event.wait()
+    print('write start')
+    mode_write = 'wb'
+    # print(box[0])
+    with open(file_name, mode_write) as file_destination:
+        file_destination.write(box[0])
+    print('write stop')
+
+
+def test_threads():
+    box = ['']
+    file_name, mode = 'prazdnik.xml', 'rb'
+    file_name_copy, mode_write = 'prazdnik_copy.xml', 'wb'
+    thread_one = Thread(target=file_read, args=(file_name, box))
+    thread_two = Thread(target=file_write, args=(file_name_copy, box))
+    thread_one.start()
+    thread_one.join()
+    thread_two.start()
+    thread_two.join()
+    print('end')
+
+
+def test_processes():
+    event = Event()
+    box = Manager().list()
+    box.append('')
+    file_name, mode = 'prazdnik.xml', 'rb'
+    file_name_copy, mode_write = 'prazdnik_copy.xml', 'wb'
+    process_read = Process(target=file_read, args=(file_name, box, event))
+    process_write = Process(target=file_write, args=(file_name_copy, box, event))
+    process_read.start()
+    process_write.start()
+    process_read.join()
+    process_write.join()
+
+
+import asyncio
+
+
+async def file_read_async(file_name: str, box: list):
+    print('read start')
+    mode = 'rb'
+    # with open(file_name, mode) as file_source:
+    #     box[0] = file_source.read()
+    await asyncio.sleep(1.0)
+    print('read stop')
+
+
+async def file_write_async(file_name: str, box: list) -> None:
+    print('write start')
+    mode_write = 'wb'
+    # with open(file_name, mode_write) as file_destination:
+    #     file_destination.write(box[0])
+    print('write stop')
+
+
+def test_async():
+    box = ['']
+    file_name, mode = 'prazdnik.xml', 'rb'
+    file_name_copy, mode_write = 'prazdnik_copy.xml', 'wb'
+    loop = asyncio.get_event_loop()
+    functions = asyncio.wait([file_read_async(file_name, box), file_write_async(file_name_copy, box)])
+    loop.run_until_complete(functions)
+
+
+async def test_async_2():
+    box = ['']
+    file_name, mode = 'prazdnik.xml', 'rb'
+    file_name_copy, mode_write = 'prazdnik_copy.xml', 'wb'
+    functions = asyncio.gather(file_read_async(file_name, box), file_write_async(file_name_copy, box))
+    await functions
+
+
+async def test_async_3():
+    box = ['']
+    file_name, mode = 'prazdnik.xml', 'rb'
+    file_name_copy, mode_write = 'prazdnik_copy.xml', 'wb'
+    task_one = asyncio.create_task(file_read_async(file_name, box))
+    task_two = asyncio.create_task(file_write_async(file_name_copy, box))
+    await task_one
+    await task_two
+
+
+from random import randint
+from time import time
+
+
+def print_matrix(matrix: list) -> None:
+    for i in matrix:
+        print(i)
+
+
+def matrix_generator(i: int, j: int, k: int) -> tuple:
+    return [[randint(100, 999) for _ in range(j)] for __ in range(i)] \
+        , [[randint(100, 999) for _ in range(k)] for __ in range(j)]
+
+
+def result_line(matrix_one, matrix_two, matrix_new, line_number):
+    def result(list_one: list, list_two: list) -> int:
+        res = 0
+        for a, b in zip(list_one, list_two):
+            # print(a,b)
+            res += a * b
+        return res
+
+    for i in range(len(matrix_two[0])):
+        matrix_new[line_number][i] = result(matrix_one[line_number], [_[i] for _ in matrix_two])
+
+
+def speed_test_decorator(func):
+    def wrapper(*args, **kwargs):
+        time_start = time()
+        func(*args, **kwargs)
+        time_end = time()
+        # for i in args:
+        #     if type(i) == list:
+        #         print_matrix(i)
+        # print_matrix(args[2])
+        print(time_end - time_start)
+        return
+
+    return wrapper
+
+
+@speed_test_decorator
+def mul_matrix(matrix_one, matrix_two, matrix_new, i):
+    for ii in range(i):
+        result_line(matrix_one, matrix_two, matrix_new, ii)
+
+
+def main_mul_matrix():
+    matrix_one, matrix_two = matrix_generator(900, 900, 5)
+    i = len(matrix_one)
+    j = len(matrix_two)
+    k = len(matrix_two[0])
+    matrix_new = [[0 for _ in range(k)] for __ in range(i)]
+    mul_matrix(matrix_one, matrix_two, matrix_new, i)
+
+def result_line_multiprocess(matrix_one, matrix_two, matrix_new, line_number):
+    def result(list_one: list, list_two: list) -> int:
+        res = 0
+        for a, b in zip(list_one, list_two):
+            res += a * b
+            # print(res)
+        return res
+
+    res = []
+    for i in range(len(matrix_two[0])):
+        res.append(result(matrix_one[line_number], [_[i] for _ in matrix_two]))
+    matrix_new[line_number] = res
+
+@speed_test_decorator
+def mul_matrix_multiprocess(matrix_one,matrix_two,matrix_new,i):
+    process = list(range(i))
+    for ii in range(i):
+        process[ii] = Process(target=result_line_multiprocess, args=(matrix_one, matrix_two, matrix_new, ii))
+        process[ii].start()
+
+        process[ii].join()
+
+
+
+def main_mul_matrix_multiprocess():
+    # event = Event()
+    matrix_one, matrix_two = matrix_generator(100, 100, 5)
+    i = len(matrix_one)
+    j = len(matrix_two)
+    k = len(matrix_two[0])
+    matrix_new = Manager().list([[_ for _ in range(k)] for __ in range(i)])
+
+    mul_matrix_multiprocess(matrix_one,matrix_two,matrix_new,i)
+
+    # process = list(range(i))
+    # for ii in range(i):
+    #     process[ii] = Process(target=result_line_multiprocess, args=(matrix_one, matrix_two, matrix_new, ii))
+    #     process[ii].start()
+    #     process[ii].join()
+    # print(matrix_new)
+
+
 if __name__ == '__main__':
-    my_string = 'gfsfpgdsfg'
-    test_p_exception(my_string)
+    main_mul_matrix_multiprocess()
+    # main_mul_matrix()
