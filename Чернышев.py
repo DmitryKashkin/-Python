@@ -1,12 +1,10 @@
-import sys
-
-
-def len_str(string0=''):
-    print(len(string0))
-    j = 0
-    for i in string0:
-        j += 1
-    print(j)
+import pickle
+import json
+from threading import Thread
+from multiprocessing import Process, Manager, Event, Array
+import asyncio
+from random import randint
+from time import time
 
 
 def new_str(str0=''):
@@ -272,7 +270,6 @@ def file_copy(my_file):
 
 
 def dict_to_file_to_dict(my_file_name: str, my_dict: dict):
-    import pickle
     my_file = open(my_file_name, 'wb')
     pickle.dump(my_dict, my_file)
     my_file.close()
@@ -282,7 +279,6 @@ def dict_to_file_to_dict(my_file_name: str, my_dict: dict):
 
 
 def list_to_file_to_list(my_file_name: str, my_list: list):
-    import pickle
     my_file = open(my_file_name, 'wb')
     pickle.dump(my_list, my_file)
     my_file.close()
@@ -292,7 +288,6 @@ def list_to_file_to_list(my_file_name: str, my_list: list):
 
 
 def dict_to_file_to_dict_json(my_file_name: str, my_dict: dict):
-    import json
     json.dump(my_dict, fp=open(my_file_name, 'w'), indent=5)
     my_json = json.load(open(my_file_name))
     print(my_json)
@@ -584,10 +579,6 @@ def custom_generator(step=1):
         yield _
 
 
-from my_math_modul import *
-import my_modul
-
-
 class TestClass:
     def my_func(self):
         c = 3
@@ -637,9 +628,6 @@ class Sqare:
         return self.__s
 
 
-import json
-
-
 class Json:
 
     def __init__(self, file_name):
@@ -663,14 +651,6 @@ class Json:
 
     def modify(self, pos, key, val):
         self.dict['base'][pos - 1][key] = val
-
-    # def dict_to_file_to_dict_json(my_file_name: str, my_dict: dict):
-    #     import json
-    #     json.dump(my_dict, fp=open(my_file_name, 'w'), indent=5)
-    #     my_json = json.load(open(my_file_name))
-    #     print(my_json)
-
-    ...
 
 
 class SquareMax:
@@ -894,10 +874,6 @@ def test_p_exception(my_string: str):
         raise Exception_If_P
 
 
-from threading import Thread
-from multiprocessing import Process, Manager, Event
-
-
 def file_read(file_name: str, box: list, event: Event):
     print('read start')
     mode = 'rb'
@@ -945,9 +921,6 @@ def test_processes():
     process_write.join()
 
 
-import asyncio
-
-
 async def file_read_async(file_name: str, box: list):
     print('read start')
     mode = 'rb'
@@ -990,10 +963,6 @@ async def test_async_3():
     task_two = asyncio.create_task(file_write_async(file_name_copy, box))
     await task_one
     await task_two
-
-
-from random import randint
-from time import time
 
 
 def print_matrix(matrix: list) -> None:
@@ -1039,13 +1008,7 @@ def mul_matrix(matrix_one, matrix_two, matrix_new, i):
         result_line(matrix_one, matrix_two, matrix_new, ii)
 
 
-def main_mul_matrix():
-    matrix_one, matrix_two = matrix_generator(900, 900, 5)
-    i = len(matrix_one)
-    j = len(matrix_two)
-    k = len(matrix_two[0])
-    matrix_new = [[0 for _ in range(k)] for __ in range(i)]
-    mul_matrix(matrix_one, matrix_two, matrix_new, i)
+
 
 def result_line_multiprocess(matrix_one, matrix_two, matrix_new, line_number):
     def result(list_one: list, list_two: list) -> int:
@@ -1060,35 +1023,51 @@ def result_line_multiprocess(matrix_one, matrix_two, matrix_new, line_number):
         res.append(result(matrix_one[line_number], [_[i] for _ in matrix_two]))
     matrix_new[line_number] = res
 
+
 @speed_test_decorator
-def mul_matrix_multiprocess(matrix_one,matrix_two,matrix_new,i):
+def mul_matrix_multiprocess(matrix_one, matrix_two, matrix_new, i):
     process = list(range(i))
     for ii in range(i):
         process[ii] = Process(target=result_line_multiprocess, args=(matrix_one, matrix_two, matrix_new, ii))
         process[ii].start()
-
+    for ii in range(i):
         process[ii].join()
 
+@speed_test_decorator
+def mul_matrix_multithread(matrix_one, matrix_two, matrix_new, i):
+    threads=list(range(i))
+    for ii in range(i):
+        threads[ii]=Thread(target=result_line, args=(matrix_one, matrix_two, matrix_new, ii))
+        threads[ii].start()
 
 
 def main_mul_matrix_multiprocess():
-    # event = Event()
-    matrix_one, matrix_two = matrix_generator(100, 100, 5)
+    matrix_one, matrix_two = matrix_generator(50, 500, 500)
     i = len(matrix_one)
     j = len(matrix_two)
     k = len(matrix_two[0])
     matrix_new = Manager().list([[_ for _ in range(k)] for __ in range(i)])
+    mul_matrix_multiprocess(matrix_one, matrix_two, matrix_new, i)
 
-    mul_matrix_multiprocess(matrix_one,matrix_two,matrix_new,i)
+def main_mul_matrix_multithread():
+    matrix_one, matrix_two = matrix_generator(50, 500, 500)
+    i = len(matrix_one)
+    j = len(matrix_two)
+    k = len(matrix_two[0])
+    matrix_new = list([[_ for _ in range(k)] for __ in range(i)])
+    mul_matrix_multithread(matrix_one, matrix_two, matrix_new, i)
 
-    # process = list(range(i))
-    # for ii in range(i):
-    #     process[ii] = Process(target=result_line_multiprocess, args=(matrix_one, matrix_two, matrix_new, ii))
-    #     process[ii].start()
-    #     process[ii].join()
-    # print(matrix_new)
+def main_mul_matrix():
+    matrix_one, matrix_two = matrix_generator(50, 500, 500)
+    i = len(matrix_one)
+    j = len(matrix_two)
+    k = len(matrix_two[0])
+    matrix_new = [[0 for _ in range(k)] for __ in range(i)]
+    mul_matrix(matrix_one, matrix_two, matrix_new, i)
 
 
 if __name__ == '__main__':
     main_mul_matrix_multiprocess()
-    # main_mul_matrix()
+    main_mul_matrix_multithread()
+    main_mul_matrix()
+    # test_t()
