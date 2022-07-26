@@ -1,10 +1,11 @@
 import pickle
 import json
 from threading import Thread
-from multiprocessing import Process, Manager, Event, Array
+from multiprocessing import Process, Manager, Event, \
+    Value, current_process, cpu_count, Pool
 import asyncio
-from random import randint
-from time import time
+from random import randint, random
+from time import (time, sleep)
 
 
 def new_str(str0=''):
@@ -987,17 +988,49 @@ def result_line(matrix_one, matrix_two, matrix_new, line_number):
         matrix_new[line_number][i] = result(matrix_one[line_number], [_[i] for _ in matrix_two])
 
 
+def result_line_pool_process(matrix_one, matrix_two, matrix_new, line_number):
+    def result(list_one: list, list_two: list) -> int:
+        res = 0
+        for a, b in zip(list_one, list_two):
+            # print(a,b)
+            res += a * b
+        return res
+
+    res = []
+
+    for i in range(len(matrix_two[0])):
+        res.append(result(matrix_one[line_number], [_[i] for _ in matrix_two]))
+    return res
+
+
+def result_line_pool_starmap(matrix_one_line, matrix_two):
+    # print(matrix_one_line)
+    # print(matrix_two)
+    def result(list_one: list, list_two: list) -> int:
+        res = 0
+        for a, b in zip(list_one, list_two):
+            # print(a,b)
+            res += a * b
+        return res
+
+    res = []
+
+    for i in range(len(matrix_two[0])):
+        res.append(result(matrix_one_line, [_[i] for _ in matrix_two]))
+    return res
+
+
 def speed_test_decorator(func):
     def wrapper(*args, **kwargs):
         time_start = time()
-        func(*args, **kwargs)
+        res = func(*args, **kwargs)
         time_end = time()
         # for i in args:
         #     if type(i) == list:
         #         print_matrix(i)
         # print_matrix(args[2])
-        print(time_end - time_start)
-        return
+        print('time ', time_end - time_start)
+        return res
 
     return wrapper
 
@@ -1006,8 +1039,6 @@ def speed_test_decorator(func):
 def mul_matrix(matrix_one, matrix_two, matrix_new, i):
     for ii in range(i):
         result_line(matrix_one, matrix_two, matrix_new, ii)
-
-
 
 
 def result_line_multiprocess(matrix_one, matrix_two, matrix_new, line_number):
@@ -1033,32 +1064,44 @@ def mul_matrix_multiprocess(matrix_one, matrix_two, matrix_new, i):
     for ii in range(i):
         process[ii].join()
 
+
 @speed_test_decorator
 def mul_matrix_multithread(matrix_one, matrix_two, matrix_new, i):
-    threads=list(range(i))
+    threads = list(range(i))
     for ii in range(i):
-        threads[ii]=Thread(target=result_line, args=(matrix_one, matrix_two, matrix_new, ii))
+        threads[ii] = Thread(target=result_line, args=(matrix_one, matrix_two, matrix_new, ii))
         threads[ii].start()
+    for ii in range(i):
+        threads[ii].join()
 
 
 def main_mul_matrix_multiprocess():
-    matrix_one, matrix_two = matrix_generator(50, 500, 500)
+    matrix_one, matrix_two = matrix_generator(6, 1000, 5000)
     i = len(matrix_one)
     j = len(matrix_two)
     k = len(matrix_two[0])
     matrix_new = Manager().list([[_ for _ in range(k)] for __ in range(i)])
     mul_matrix_multiprocess(matrix_one, matrix_two, matrix_new, i)
 
+
 def main_mul_matrix_multithread():
-    matrix_one, matrix_two = matrix_generator(50, 500, 500)
+    matrix_one, matrix_two = matrix_generator(6, 1000, 5000)
     i = len(matrix_one)
     j = len(matrix_two)
     k = len(matrix_two[0])
     matrix_new = list([[_ for _ in range(k)] for __ in range(i)])
     mul_matrix_multithread(matrix_one, matrix_two, matrix_new, i)
 
+
+def mul_matrix_pool_process(matrix_one, matrix_two, matrix_new, i):
+    res = [result_line_pool_process(matrix_one, matrix_two, matrix_new, ii) for ii in range(i)]
+    # sleep(5)
+    # print(res)
+    return res
+
+
 def main_mul_matrix():
-    matrix_one, matrix_two = matrix_generator(50, 500, 500)
+    matrix_one, matrix_two = matrix_generator(6, 1000, 5000)
     i = len(matrix_one)
     j = len(matrix_two)
     k = len(matrix_two[0])
@@ -1066,8 +1109,84 @@ def main_mul_matrix():
     mul_matrix(matrix_one, matrix_two, matrix_new, i)
 
 
+def main_mul_matrix_pool_process():
+    matrix_one, matrix_two = matrix_generator(6, 1000, 5000)
+    i = len(matrix_one)
+    j = len(matrix_two)
+    k = len(matrix_two[0])
+    matrix_new = [[0 for _ in range(k)] for __ in range(i)]
+    pool_size = cpu_count() * 2
+    with Pool(processes=pool_size) as pool:
+        pool_res = [pool.apply_async(mul_matrix_pool_process, (matrix_one, matrix_two, matrix_new, i,)) for _ in
+                    range(pool_size)]
+        new_line = [res.get() for res in pool_res]
+        print(new_line)
+
+
+@speed_test_decorator
+def main_mul_matrix_pool_starmap():
+    matrix_one, matrix_two = matrix_generator(6, 1000, 5000)
+    i = len(matrix_one)
+    j = len(matrix_two)
+    k = len(matrix_two[0])
+    pool_size = cpu_count() * 2
+    with Pool(processes=pool_size) as pool:
+        pool_res = pool.starmap(result_line_pool_starmap, zip(matrix_one, [matrix_two for _ in matrix_one]))
+        # new_line = [res.get() for res in pool_res]
+        # print(pool_res)
+
+
+def count_add(my_count, step):
+    my_count.value += step
+
+
+def count_in_multiprocess():
+    my_count = Value('i', 0)
+    step = 5
+    number_of_processes = 100
+    process = list(range(number_of_processes))
+
+    for i in range(number_of_processes):
+        process[i] = Process(target=count_add, args=(my_count, step))
+        process[i].start()
+    for i in range(number_of_processes):
+        process[i].join()
+    sleep(1)
+    print(my_count.value)
+
+
+# @speed_test_decorator
+def median(list_one: list) -> int:
+    list_one.sort()
+    return list_one[len(list_one) // 2]
+
+
+def list_generator(len_list: int) -> list:
+    list_of_lists = [[random() for _ in range(len_list)] for __ in range(10)]
+    return list_of_lists
+
+
+def median_main():
+    list_of_lists = list_generator(500001)
+    for list_ in list_of_lists:
+        median(list_)
+
+
+def median_multipocess_main():
+    list_of_lists = list_generator(500001)
+
+    @speed_test_decorator
+    def median_pool():
+        pool_size = cpu_count() * 2
+        with Pool(processes=pool_size) as pool:
+            pool_res = pool.map(median, list_of_lists)
+            print(pool_res)
+
+    median_pool()
+
+def median_multithreads_main():
+    ...
+
 if __name__ == '__main__':
-    main_mul_matrix_multiprocess()
-    main_mul_matrix_multithread()
-    main_mul_matrix()
-    # test_t()
+    # median_main()
+    median_multipocess_main()
