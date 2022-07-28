@@ -1,8 +1,8 @@
 import pickle
 import json
-from threading import Thread
+from threading import Thread, Event as Event_th
 from multiprocessing import Process, Manager, Event, \
-    Value, current_process, cpu_count, Pool
+    Value, current_process, cpu_count, Pool, Queue as Queue_proc
 import asyncio
 from random import randint, random
 from time import (time, sleep)
@@ -1202,26 +1202,13 @@ def median_multithreads_main():
     median_threads(list_of_lists)
 
 
-def queue_print(my_queue, i, event: Event):
-    ...
-    # while not my_queue.empty():
-    #     event.wait(1)
-    #     print(my_queue.get(), ' thread (process) ', i)
-    #     event.set()
-    #     sleep(0.1)
-
-
-def queue_process(my_queue, event):
-    # proces = []
-    proces=Process(target=queue_print, args=(my_queue, 0, event))
-    proces.start()
-    proces.join()
-
-    # for i in range(4):
-    #     proces.append(Process(target=queue_print, args=(my_queue, i, event)))
-    #     proces[i].start()
-    # for i in range(4):
-    #     proces[i].join()
+def queue_print(my_queue, i, event):
+    # print(my_queue, i, event)
+    while not my_queue.empty():
+        event.wait(1)
+        print(my_queue.get(), ' thread (process) ', i)
+        event.set()
+        sleep(0.1)
 
 
 def queue_put(my_queue: Queue):
@@ -1229,7 +1216,7 @@ def queue_put(my_queue: Queue):
         my_queue.put(random())
 
 
-def test_queue_multithreads():
+def test_queue():
     def queue_threads():
         threads = []
         for i in range(4):
@@ -1238,20 +1225,51 @@ def test_queue_multithreads():
         for i in range(4):
             threads[i].join()
 
-    event = Event()
+    def queue_process():
+        proces = []
+        for i in range(4):
+            proces.append(Process(target=queue_print, args=(my_queue, i, event)))
+            proces[i].start()
+        for i in range(4):
+            proces[i].join()
+
+    event = Event_th()
     my_queue = Queue()
+    queue_put(my_queue)
+    print('threads')
+    queue_threads()
 
-    # queue_put(my_queue)
-    # print('threads')
-    # queue_threads()
-
+    event = Event()
+    my_queue = Queue_proc()
     queue_put(my_queue)
     print('process')
-    proces=Process(target=queue_print, args=(my_queue, 0, event))
-    proces.start()
-    proces.join()
+    queue_process()
 
+
+def count_plus_5(my_count, event: Event(), proc_id):
+    while my_count.value < 50:
+        print('process ', proc_id, ' start')
+        if my_count.value != 0:
+            event.wait()
+        for i in range(5):
+            my_count.value += 1
+        event.set()
+        print('process ', proc_id, ' sleep')
+        sleep(0.01)
+
+
+
+def count_5_plus_main():
+    my_count = Value('i', 0)
+    event = Event()
+    my_process = [Process(target=count_plus_5, args=(my_count, event, 1)),
+                  Process(target=count_plus_5, args=(my_count, event, 2))]
+    my_process[0].start()
+    my_process[1].start()
+    my_process[0].join()
+    my_process[1].join()
+    print(my_count.value)
 
 
 if __name__ == '__main__':
-    test_queue_multithreads()
+    count_5_plus_main()
