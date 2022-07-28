@@ -6,6 +6,7 @@ from multiprocessing import Process, Manager, Event, \
 import asyncio
 from random import randint, random
 from time import (time, sleep)
+from queue import Queue
 
 
 def new_str(str0=''):
@@ -1158,7 +1159,9 @@ def count_in_multiprocess():
 # @speed_test_decorator
 def median(list_one: list) -> int:
     list_one.sort()
-    return list_one[len(list_one) // 2]
+    res = list_one[len(list_one) // 2]
+    print(res)
+    return res
 
 
 def list_generator(len_list: int) -> list:
@@ -1180,14 +1183,75 @@ def median_multipocess_main():
         pool_size = cpu_count() * 2
         with Pool(processes=pool_size) as pool:
             pool_res = pool.map(median, list_of_lists)
-            print(pool_res)
+            # print(pool_res)
 
     median_pool()
 
+
 def median_multithreads_main():
+    list_of_lists = list_generator(500001)
+
+    @speed_test_decorator
+    def median_threads(list_of_lists: list):
+        threads = []
+
+        for i in range(len(list_of_lists)):
+            threads.append(Thread(target=median, args=(list_of_lists[i],)))
+            threads[i].start()
+
+    median_threads(list_of_lists)
+
+
+def queue_print(my_queue, i, event: Event):
     ...
+    # while not my_queue.empty():
+    #     event.wait(1)
+    #     print(my_queue.get(), ' thread (process) ', i)
+    #     event.set()
+    #     sleep(0.1)
+
+
+def queue_process(my_queue, event):
+    # proces = []
+    proces=Process(target=queue_print, args=(my_queue, 0, event))
+    proces.start()
+    proces.join()
+
+    # for i in range(4):
+    #     proces.append(Process(target=queue_print, args=(my_queue, i, event)))
+    #     proces[i].start()
+    # for i in range(4):
+    #     proces[i].join()
+
+
+def queue_put(my_queue: Queue):
+    for i in range(20):
+        my_queue.put(random())
+
+
+def test_queue_multithreads():
+    def queue_threads():
+        threads = []
+        for i in range(4):
+            threads.append(Thread(target=queue_print, args=(my_queue, i, event)))
+            threads[i].start()
+        for i in range(4):
+            threads[i].join()
+
+    event = Event()
+    my_queue = Queue()
+
+    # queue_put(my_queue)
+    # print('threads')
+    # queue_threads()
+
+    queue_put(my_queue)
+    print('process')
+    proces=Process(target=queue_print, args=(my_queue, 0, event))
+    proces.start()
+    proces.join()
+
 
 
 if __name__ == '__main__':
-    # median_main()
-    median_multipocess_main()
+    test_queue_multithreads()
