@@ -1258,7 +1258,6 @@ def count_plus_5(my_count, event: Event(), proc_id):
         sleep(0.01)
 
 
-
 def count_5_plus_main():
     my_count = Value('i', 0)
     event = Event()
@@ -1271,5 +1270,51 @@ def count_5_plus_main():
     print(my_count.value)
 
 
+def read_file_multiprocess(file_name, queue: Queue_proc):
+    with open(file_name, 'r') as file_source:
+        for line in file_source:
+            queue.put(line)
+        print('end for')
+    print('end with')
+
+
+def write_file_multiprocess(file_name, queue: Queue_proc):
+    with open(file_name, 'w') as file_destination:
+        while not queue.empty():
+            file_destination.write(queue.get())
+            sleep(0.1)
+    print('queue empty')
+
+
+def read_1_write_3_process():
+    """
+    Напишите программу, в которой один поток (процесс) осуществляет чтение данных из файла,
+    а три других потока (процесса) осуществляют их запись в файл.
+    У каждого потока (процесса) свой файл для записи данных.
+    При этом учтите, что файлы, в которые производится запись,
+    не должны содержать в себе один и тот же набор данных,
+    то есть прочитанная строка из файла может быть единожды записана в один из трех файлов.
+    :return:
+    """
+    file_name = 'wares_txt.txt'
+    file_destination_sample = 'wares_copy'
+    queue = Queue_proc()
+    process_read = Process(target=read_file_multiprocess, args=(file_name, queue))
+    process_read.start()
+    while queue.empty():
+        pass  # Ждем появление первого объекта в очереди
+    process_write = list(range(3))
+    print('write start')
+    for i in range(3):
+        file_destination = file_destination_sample + '_' + str(i) + '.txt'
+        # print(file_destination)
+        process_write[i] = Process(target=write_file_multiprocess, args=(file_destination, queue))
+        process_write[i].start()
+    # for i in range(3):
+    #     process_write[i].join()
+    process_read.join()
+
+
+
 if __name__ == '__main__':
-    count_5_plus_main()
+    read_1_write_3_process()
