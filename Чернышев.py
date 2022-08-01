@@ -1278,7 +1278,7 @@ def read_file_multiprocess(file_name, queue: Queue_proc):
     print('end with')
 
 
-def write_file_multiprocess(file_name, queue: Queue_proc):
+def write_file_multiprocess(file_name, queue):
     with open(file_name, 'w') as file_destination:
         while not queue.empty():
             file_destination.write(queue.get())
@@ -1315,6 +1315,24 @@ def read_1_write_3_process():
     process_read.join()
 
 
+def read_1_write_3_threads():
+    file_name = 'wares_txt.txt'
+    file_destination_sample = 'wares_copy'
+    queue = Queue()
+    thread_read = Thread(target=read_file_multiprocess, args=(file_name, queue))
+    thread_read.start()
+    thread_read.join()
+    while queue.empty():
+        pass  # Ждем появление первого объекта в очереди
+    # while not queue.empty():
+    #     print(queue.get())
+
+    thread_write = list(range(3))
+    for i in range(3):
+        file_destination = file_destination_sample + '_' + str(i) + '.txt'
+        thread_write[i] = Thread(target=write_file_multiprocess, args=(file_destination, queue))
+        thread_write[i].start()
+
 
 if __name__ == '__main__':
-    read_1_write_3_process()
+    read_1_write_3_threads()
