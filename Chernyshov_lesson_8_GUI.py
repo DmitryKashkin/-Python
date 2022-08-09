@@ -91,13 +91,19 @@ class EveningSurvey(QWidget):
         super(EveningSurvey, self).__init__()
         self.lables()
         self.check_boxes()
+        self.display_widgets()
         self.window_set()
-
 
     def lables(self):
         self.label = QLabel(self)
+        self.label.setAlignment(Qt.AlignHCenter)
+        title = QLabel('Evening Survey')
+        title.setFont((QFont('Arial', 17)))
 
     def check_boxes(self):
+        pass
+
+    def display_widgets(self):
         pass
 
     def window_set(self):
@@ -107,29 +113,29 @@ class EveningSurvey(QWidget):
 
 
 style = """
-    QWidget {
-        background-color: "green";
-        color: "white";
-    }
-    QPushButton {
-        font-size: 16px;
-        background-color: "darkgreen"
-    }
-    QLineEdit {
-        background-color: "white";
-        color: "black";
-    }
-    QLabel {
-        font-size: 12pt;
-    }
-    QCheckBox {
-        font-size: 12pt;
-    }
-"""
+#     QWidget {
+#         background-color: "green";
+#         color: "white";
+#     }
+#     QPushButton {
+#         font-size: 16px;
+#         background-color: "darkgreen"
+#     }
+#     QLineEdit {
+#         background-color: "white";
+#         color: "black";
+#     }
+#     QLabel {
+#         font-size: 12pt;
+#     }
+#     QCheckBox {
+#         font-size: 12pt;
+#     }
+# """
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setStyleSheet(style)
+    # app.setStyleSheet(style)
 
     window = EveningSurvey()
     sys.exit(app.exec_())
