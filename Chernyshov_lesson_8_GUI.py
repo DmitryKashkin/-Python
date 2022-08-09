@@ -99,6 +99,45 @@ class EveningSurvey(QWidget):
         self.label.setAlignment(Qt.AlignHCenter)
         title = QLabel('Evening Survey')
         title.setFont((QFont('Arial', 17)))
+        question = QLabel('Насколько плодотворно прошел Ваш день?')
+        question.setAlignment(Qt.AlignHCenter)
+        title_h_box = QHBoxLayout()
+        title_h_box.addStretch()
+        title_h_box.addWidget(title)
+        title_h_box.addStretch()
+        ratings = ['Ужасно', 'Так себе', 'Нормально', 'Отлично']
+        ratings_h_box = QHBoxLayout()
+        ratings_h_box.setSpacing(80)
+        ratings_h_box.addStretch()
+        for rating in ratings:
+            rate_label = QLabel(rating, self)
+            ratings_h_box.addWidget(rate_label)
+        ratings_h_box.addStretch()
+        cb_h_box = QHBoxLayout()
+        cb_h_box.setSpacing(100)
+        scale_gb = QButtonGroup(self)
+        cb_h_box.addStretch()
+        for cb in range(len(ratings)):
+            scale_cb = QCheckBox(str(cb), self)
+            cb_h_box.addWidget(scale_cb)
+            scale_gb.addButton(scale_cb)
+        cb_h_box.addStretch()
+        scale_gb.buttonClicked.connect(self.checkbox_clicked)
+        close_button = QPushButton('Close', self)
+        close_button.clicked.connect(self.close)
+        v_box = QVBoxLayout()
+        v_box.addLayout(title_h_box)
+        v_box.addWidget(question)
+        v_box.addStretch(1)
+        v_box.addLayout(ratings_h_box)
+        v_box.addLayout(cb_h_box)
+        v_box.addStretch(2)
+        v_box.addWidget(self.label)
+        v_box.addWidget(close_button)
+        self.setLayout(v_box)
+
+    def checkbox_clicked(self, cb):
+        self.label.setText(f'Selected: {cb.text()}')
 
     def check_boxes(self):
         pass
@@ -107,35 +146,35 @@ class EveningSurvey(QWidget):
         pass
 
     def window_set(self):
-        self.setGeometry(1000, 500, 400, 300)
+        self.setGeometry(1000, 500, 400, 200)
         self.setWindowTitle('Evening Survey')
         self.show()
 
 
 style = """
-#     QWidget {
-#         background-color: "green";
-#         color: "white";
-#     }
-#     QPushButton {
-#         font-size: 16px;
-#         background-color: "darkgreen"
-#     }
-#     QLineEdit {
-#         background-color: "white";
-#         color: "black";
-#     }
-#     QLabel {
-#         font-size: 12pt;
-#     }
-#     QCheckBox {
-#         font-size: 12pt;
-#     }
-# """
+    QWidget {
+        background-color: "green";
+        color: "white";
+    }
+    QPushButton {
+        font-size: 16px;
+        background-color: "darkgreen"
+    }
+    QLineEdit {
+        background-color: "white";
+        color: "black";
+    }
+    QLabel {
+        font-size: 12pt;
+    }
+    QCheckBox {
+        font-size: 12pt;
+    }
+"""
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    # app.setStyleSheet(style)
+    app.setStyleSheet(style)
 
     window = EveningSurvey()
     sys.exit(app.exec_())
