@@ -1,7 +1,9 @@
 import random
 import sys
-from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QLineEdit, QCheckBox
+from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QLabel, \
+    QLineEdit, QCheckBox, QButtonGroup, QHBoxLayout, QVBoxLayout
 from PySide2.QtCore import Qt
+from PySide2.QtGui import QFont
 
 
 class LoginWindow(QWidget):
@@ -84,6 +86,26 @@ class CheckBoxWindow(QWidget):
         self.lable_two.setText(choose)
 
 
+class EveningSurvey(QWidget):
+    def __init__(self):
+        super(EveningSurvey, self).__init__()
+        self.lables()
+        self.check_boxes()
+        self.window_set()
+
+
+    def lables(self):
+        self.label = QLabel(self)
+
+    def check_boxes(self):
+        pass
+
+    def window_set(self):
+        self.setGeometry(1000, 500, 400, 300)
+        self.setWindowTitle('Evening Survey')
+        self.show()
+
+
 style = """
     QWidget {
         background-color: "green";
@@ -109,5 +131,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyleSheet(style)
 
-    window = CheckBoxWindow()
+    window = EveningSurvey()
     sys.exit(app.exec_())
