@@ -58,9 +58,9 @@ def symbol_in_str(str0=''):
     val = [str0.count(c) for c in keys]
     symbols = dict(zip(keys, val))
     max_val = max(val)
-    for i in symbols:
-        if symbols[i] == max_val:
-            return i
+    for ii in symbols:
+        if symbols[ii] == max_val:
+            return ii
 
 
 def swapcase_str(str0: str) -> str:
