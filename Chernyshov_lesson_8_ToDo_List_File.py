@@ -1,4 +1,4 @@
-import random
+import json
 import sys
 from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QFileDialog, \
     QLineEdit, QCheckBox, QButtonGroup, QHBoxLayout, QVBoxLayout, QTextEdit, QGridLayout, QMainWindow, QMessageBox
@@ -90,24 +90,31 @@ class ToDoListWidget(QWidget):
 
     def showDialog(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', 'c:/temp')[0]
-        print(fname)
-        # f = open(fname, 'r')
-        # with f:
-        #     data = f.read()
-        #     print(data)
+        with open(fname, 'r') as f:
+            data = json.load(f)
+        for it in self.day_meet:
+            it.setText(data[1].pop(0))
+        for checkbox, edit in self.dict_todo.items():
+            checkbox_state = data[0][checkbox.objectName()][0]
+            checkbox.setChecked(checkbox_state)
+            edit.setText(data[0][checkbox.objectName()][1])
 
     def load_todo_list(self):
         self.showDialog()
 
     def save_todo_list(self):
+        data = ['', '']
+        todo = {}
         fname = QFileDialog.getSaveFileName(self, 'Save file', 'c:/temp')[0]
-        f = open(fname, 'r')
-        with f:
-            data = f.read()
-            print(data)
-
-
-
+        with open(fname, 'w') as f:
+            for checkbox, edit in self.dict_todo.items():
+                todo[checkbox.objectName()] = [checkbox.isChecked(), edit.text()]
+            data[0] = todo
+            todo = []
+            for item in self.day_meet:
+                todo.append(item.toPlainText())
+            data[1] = todo
+            json.dump(data, f)
 
 
 class MainWindow(QMainWindow):
