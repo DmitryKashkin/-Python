@@ -29,6 +29,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         self.i_am = ''
         self.game_board = [['', '', ''], ['', '', ''], ['', '', '']]
+        self.i = 0
+        self.j = 0
         super(MainWindow, self).__init__()
         self.setupUi(self)
         self.buttonGroup.buttonClicked.connect(self.click_btn)
@@ -40,13 +42,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.warning_mesage()
         else:
             btn.setText(self.i_am)
-            j = int(btn.objectName()[-2])
-            i = int(btn.objectName()[-1])
-            self.game_board[j][i] = self.i_am
-            self.check_for_victory(btn.objectName())
+            self.j = int(btn.objectName()[-2])
+            self.i = int(btn.objectName()[-1])
+            self.game_board[self.j][self.i] = self.i_am
+            self.check_for_victory()
             print(self.game_board)
 
-    def check_for_victory(self, btn: str):
+    def check_for_victory(self):
 
         pass
 
@@ -58,7 +60,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for btn in self.buttonGroup.buttons():
             btn.setText('')
         self.game_board = [['', '', ''], ['', '', ''], ['', '', '']]
-
 
     def new_game(self):
         options = ("X", "0")
