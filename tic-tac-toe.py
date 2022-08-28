@@ -49,8 +49,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print(self.game_board)
 
     def check_for_victory(self):
+        for i in range(3):
+            pass
 
-        pass
 
     def warning_mesage(self):
         dlg = WarningDialog()
