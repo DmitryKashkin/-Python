@@ -51,6 +51,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.check_for_victory()
             print(self.game_board)
 
+
     def victory(self):
         print('Victory')
         self.new_game()
