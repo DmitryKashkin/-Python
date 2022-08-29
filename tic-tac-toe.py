@@ -30,7 +30,8 @@ class WarningDialog(QDialog):
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         self.i_am = ''
-        self.game_board = [['', '', ''], ['', '', ''], ['', '', '']]
+        self.dict_i_am = {'X': 1, '0': -1}
+        self.game_board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
         self.i = 0
         self.j = 0
         super(MainWindow, self).__init__()
@@ -46,29 +47,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             btn.setText(self.i_am)
             self.j = int(btn.objectName()[-2])
             self.i = int(btn.objectName()[-1])
-            self.game_board[self.j][self.i] = self.i_am
+            self.game_board[self.j][self.i] = self.dict_i_am[self.i_am]
             self.check_for_victory()
             print(self.game_board)
 
     def victory(self):
         print('Victory')
+        self.new_game()
+
 
     def check_for_victory(self):
-        if self.game_board[self.j][0] == self.game_board[self.j][1] and self.game_board[self.j][1] == \
-                self.game_board[self.j][2]:
+        sum_1 = self.game_board[self.j][0] + self.game_board[self.j][1] + self.game_board[self.j][2]
+        sum_2 = self.game_board[0][self.i] + self.game_board[1][self.i] + self.game_board[2][self.i]
+        sum_3 = self.game_board[0][0] + self.game_board[1][1] + self.game_board[2][2]
+        sum_4 = self.game_board[2][0] + self.game_board[1][1] + self.game_board[0][2]
+        if 3 in (sum_1, sum_2, sum_3, sum_4) or -3 in (sum_1, sum_2, sum_3, sum_4):
             self.victory()
             return
-        if self.game_board[0][self.i] == self.game_board[1][self.i] and self.game_board[0][self.i] == \
-                self.game_board[2][self.i]:
-            self.victory()
-            return
-        if self.game_board[0][0]==self.game_board[1][1] and self.game_board[0][0]==self.game_board[2][2]:
-            self.victory()
-            return
-        if self.game_board[2][0]==self.game_board[1][1] and self.game_board[0][0]==self.game_board[0][2]:
-            self.victory()
-            return
-
 
     def warning_mesage(self):
         dlg = WarningDialog()
@@ -77,7 +72,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def clear(self):
         for btn in self.buttonGroup.buttons():
             btn.setText('')
-        self.game_board = [['', '', ''], ['', '', ''], ['', '', '']]
+        self.game_board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 
     def new_game(self):
         options = ("X", "0")
