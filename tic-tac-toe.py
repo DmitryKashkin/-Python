@@ -1,16 +1,12 @@
 import sys
 import time
 from random import randint
-
 from PySide2.QtWidgets import QApplication, QWidget, QPushButton, QLabel, \
     QLineEdit, QCheckBox, QButtonGroup, QHBoxLayout, QVBoxLayout, QTextEdit, QGridLayout, \
     QMainWindow, QMessageBox, QInputDialog, QDialog, QDialogButtonBox
 from PySide2.QtCore import QRect
 from PySide2.QtGui import QFont, Qt
 from TicTacToe import Ui_MainWindow
-
-
-# from ChooseDialog import Ui_ChooseDialog
 
 
 class WarningDialog(QDialog):
@@ -32,6 +28,7 @@ class WarningDialog(QDialog):
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
         self.is_new_game = True
+        self.comp_move = True
         self.i_am = ''
         self.i_am_comp = ''
         self.dict_i_am = {'X': 1, '0': -1}
@@ -49,6 +46,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.buttonGroup.buttonClicked.connect(self.click_btn)
         self.actionNew_Game.triggered.connect(self.new_game)
+        self.actionClose.triggered.connect(self.close)
         self.new_game()
 
     def click_btn(self, btn: QPushButton):
@@ -60,12 +58,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.j = int(btn.objectName()[-2])
             self.i = int(btn.objectName()[-1])
             self.game_board[self.j][self.i] = self.dict_i_am[self.i_am]
+            self.comp_move = True
             self.check_for_victory()
             self.next_move()
-            print(self.game_board)
 
     def next_move(self):
         if self.is_new_game:
+            return
+        if not self.comp_move:
             return
         while True:
             self.i = randint(0, 2)
@@ -75,6 +75,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 btn = self.button_list[self.j][self.i]
                 btn.setText(self.i_am_comp)
                 break
+        self.comp_move = False
         self.check_for_victory()
 
     def victory(self):
@@ -91,7 +92,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sum_4 = self.game_board[2][0] + self.game_board[1][1] + self.game_board[0][2]
         if 3 in (sum_1, sum_2, sum_3, sum_4) or -3 in (sum_1, sum_2, sum_3, sum_4):
             self.victory()
-            return
 
     def warning_mesage(self):
         dlg = WarningDialog("СЮДА НЕ ХОДИ!")
@@ -113,6 +113,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.i_am == '0':
             self.i_am_comp = 'X'
             self.is_new_game = False
+            self.comp_move = True
             self.next_move()
 
 
