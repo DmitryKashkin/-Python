@@ -6,6 +6,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.actions.key_actions import KeyActions
 import pickle
+from pyshadow.main import Shadow
 
 
 def yandex():
@@ -24,26 +25,52 @@ def yandex():
 
 
 def yandex_music():
-    EXE_PATH = r'chromedriver.exe'
+    def login():
+
+        try:
+            for cookie in pickle.load(open('cookies', 'rb')):
+                driver.add_cookie(cookie)
+        except FileNotFoundError:
+
+            element = driver.find_element(By.CLASS_NAME, 'AuthLoginInputToggle-type')
+            element.click()
+            element_login = driver.find_element('id', 'passp-field-login')
+            element_login.send_keys('m7842066' + Keys.RETURN)
+            sleep(2)
+            element_pass = driver.find_element('id', 'passp-field-passwd')
+            element_pass.send_keys('Pim$h@srh@12' + Keys.RETURN)
+            sleep(1)
+            action.send_keys(Keys.RETURN)
+            action.perform()
+            sleep(1)
+
+            while True:
+                try:
+                    element = driver.find_element(By.CLASS_NAME, 'passp-phone-template')
+                except selenium.common.exceptions.NoSuchElementException:
+                    break
+                else:
+                    sleep(.1)
+
+            sleep(1)
+            pickle.dump(driver.get_cookies(), open('cookies', 'wb'))
+        else:
+            sleep(3)
+            driver.refresh()
+
     driver = webdriver.Chrome()
+    # shadow = Shadow(driver)
     action = ActionChains(driver)
     driver.get(
-        'https://passport.yandex.ru/auth?origin=music_button-header&retpath=https%3A%2F%2Fmusic.yandex.ru%2Fsettings%3Freqid%3D42336580116627399272688109178242113%26from-passport')
+        'https://music.yandex.ru/home')
+    # driver.get(
+    #     'https://passport.yandex.ru/auth?origin=music_button-header&retpath=https%3A%2F%2Fmusic.yandex.ru%2Fsettings%3Freqid%3D42336580116627399272688109178242113%26from-passport')
     sleep(1)
-    element = driver.find_element(By.CLASS_NAME, 'AuthLoginInputToggle-type')
-    element.click()
-    element_login = driver.find_element('id', 'passp-field-login')
-    element_login.send_keys('m7842066' + Keys.RETURN)
-    sleep(2)
-    element_pass = driver.find_element('id', 'passp-field-passwd')
-    element_pass.send_keys('Pim$h@srh@12' + Keys.RETURN)
-    sleep(1)
-    action.send_keys(Keys.RETURN)
-    action.perform()
-    input('continue?')
+
+    login()
 
     try:
-        element=driver.find_element(By.CLASS_NAME, 'pay-promo-close-btn js-close')
+        element = driver.find_element(By.CLASS_NAME, 'pay-promo-close-btn js-close')
     except selenium.common.exceptions.NoSuchElementException:
         pass
     else:
@@ -52,13 +79,34 @@ def yandex_music():
     sleep(3)
     element = driver.find_element(By.CLASS_NAME, 'rup__content-button')
     element.click()
-    input('continue?')
-    element = driver.find_element(By.CLASS_NAME, 'K390 I4mG') # Play
-    element.click()
-    # element=driver.find_element(By.CLASS_NAME,'K390 I4mG')
 
     while True:
-        pass
+        input('continue?')
+        shadow_host = driver.find_element(By.CLASS_NAME, 'C7Yd')
+        shadow_root = shadow_host.shadow_root
+        shadow_content = shadow_root.find_element(By.CLASS_NAME, 'ODc')
+        # driver.find_element(By.XPATH, "//video[@preload='auto']")
+
+        # element = shadow.find_element("div[class='K390 I4mG']")
+
+        print('ok')
+        # sleep(.25)
+        # driver.find_element(By.CLASS_NAME, 'U4mmIQOw').click()
+        # sleep(.25)
+        # driver.find_element(By.CLASS_NAME, 'U4mmIQOw').click()
+
+    # while True:
+    #     sleep(.5)
+    #     try:
+    #         element = driver.find_element(By.CLASS_NAME, 'K390 I4mG')
+    #     except selenium.common.exceptions.NoSuchElementException:
+    #         pass
+    #     else:
+    #         element.click()
+    #         sleep(.25)
+    #         driver.find_element(By.CLASS_NAME, 'iLXh Zqa0uC14Of fRHekJD').click()
+    #         sleep(.25)
+    #         driver.find_element(By.CLASS_NAME, 'U4mmIQOw').click()
 
 
 if __name__ == '__main__':
