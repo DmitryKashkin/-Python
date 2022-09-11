@@ -41,6 +41,7 @@ def yandex_music():
     action.send_keys(Keys.RETURN)
     action.perform()
     input('continue?')
+
     try:
         element=driver.find_element(By.CLASS_NAME, 'pay-promo-close-btn js-close')
     except selenium.common.exceptions.NoSuchElementException:
